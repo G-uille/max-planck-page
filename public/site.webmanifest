@@ -1,0 +1,21 @@
+{
+  "name": "Cursillo Max Planck - Ciencia para Jóvenes",
+  "short_name": "Cursillo Max Planck",
+  "icons": [
+    {
+      "src": "/favicon.ico/web-app-manifest-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/favicon.ico/web-app-manifest-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "theme_color": "#ffffff",
+  "background_color": "#ffffff",
+  "display": "standalone"
+}

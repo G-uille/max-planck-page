@@ -1,0 +1,18 @@
+.p-galleria-thumbnail-container {
+    width: 100% !important;
+}
+
+.p-galleria-thumbnail-items {
+    justify-content: space-between !important;
+    width: 100% !important;
+}
+
+.p-galleria .p-galleria-item-prev, 
+.p-galleria .p-galleria-item-next {
+    color: white !important;
+}
+
+.p-galleria .p-galleria-item-prev:hover, 
+.p-galleria .p-galleria-item-next:hover {
+    background-color: rgba(255, 255, 255, 0.2) !important;
+}
