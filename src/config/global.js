@@ -1,3 +1,4 @@
 export const global = {
-    url: ''
-}
+  url: "https://cursillomaxplanck.com/api",
+  //   url: "http://localhost:3000",
+};
