@@ -1,4 +1,4 @@
+// config/global.ts
 export const global = {
-  url: "https://cursillomaxplanck.com/api",
-  //   url: "http://localhost:3000",
+  url: import.meta.env.VITE_API_URL || "/api",
 };
