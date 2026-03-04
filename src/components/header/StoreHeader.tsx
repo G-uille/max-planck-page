@@ -55,19 +55,34 @@ const StoreHeader: React.FC = () => {
                     `}
         />
         {display.mdAndDown && (
-          <IconButton
-            sx={{ p: "4px" }}
-            aria-label="menu"
-            onClick={handleClickMenu}
-          >
-            <MenuIcon
-              sx={{
-                color: location.pathname.startsWith("/clase")
-                  ? "white"
-                  : "white",
-              }}
-            />
-          </IconButton>
+          <div className="ap-flex ap-items-center ap-gap-2">
+            {/* Mobile: Cursos (compacto) */}
+            <button
+              onClick={() => navigate("/cursos")}
+              className="ap-bg-[#FFC62D] ap-text-black ap-text-[12px] ap-rounded-lg ap-px-3 ap-py-2 ap-border ap-border-[#FDD877]"
+            >
+              Cursos
+            </button>
+
+            {/* Mobile: Aula (compacto) */}
+            <a
+              href="https://cursos.cursillomaxplanck.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="ap-bg-[#1A1A1A] ap-text-white ap-text-[12px] ap-rounded-lg ap-px-3 ap-py-2 ap-border ap-border-[#2B2B2B]"
+            >
+              Aula
+            </a>
+
+            {/* Menú hamburguesa */}
+            <IconButton
+              sx={{ p: "4px" }}
+              aria-label="menu"
+              onClick={handleClickMenu}
+            >
+              <MenuIcon sx={{ color: "white" }} />
+            </IconButton>
+          </div>
         )}
       </div>
       {!display.mdAndDown && (
@@ -91,17 +106,29 @@ const StoreHeader: React.FC = () => {
       )}
 
       <div className="ap-flex ap-gap-2">
-        {!display.mdAndDown && (
-          <a
-            href="https://cursos.cursillomaxplanck.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-            //   className=" ap-block ap-text-center ap-border ap-border-[#FFC62D]  ap-text-[#FFC62D] ap-text-sm ap-rounded-lg ap-py-2 ap-px-4"
-            className=" ap-block ap-text-center ap-bg-white ap-text-black  ap-text-sm ap-rounded-lg ap-py-2 ap-px-4"
-          >
-            Aula virtual
-          </a>
-        )}
+        <div className="ap-flex ap-gap-2 ap-items-center">
+          {/* DESKTOP: Cursos */}
+          {!display.mdAndDown && (
+            <button
+              onClick={() => navigate("/cursos")}
+              className="ap-block ap-text-center ap-bg-[#FFC62D] ap-text-black ap-text-sm ap-rounded-lg ap-py-2 ap-px-4 ap-border ap-border-[#FDD877]"
+            >
+              Cursos
+            </button>
+          )}
+
+          {/* DESKTOP: Aula virtual */}
+          {!display.mdAndDown && (
+            <a
+              href="https://cursos.cursillomaxplanck.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="ap-block ap-text-center ap-bg-white ap-text-black ap-text-sm ap-rounded-lg ap-py-2 ap-px-4"
+            >
+              Aula virtual
+            </a>
+          )}
+        </div>
 
         {/* {!display.mdAndDown && (
           <Link
@@ -170,7 +197,7 @@ const StoreHeader: React.FC = () => {
             ),
         )}
 
-        <MenuItem
+        {/* <MenuItem
           className="!ap-font-[Poppins]  !ap-text-[14px] !ap-flex !ap-w-full !ap-justify-end"
           onClick={handleCloseMenu}
         >
@@ -182,7 +209,7 @@ const StoreHeader: React.FC = () => {
           >
             Aula virtual
           </a>
-        </MenuItem>
+        </MenuItem> */}
         {/* <MenuItem
           className="!ap-font-[Poppins] !ap-text-[14px] !ap-flex !ap-w-full !ap-justify-end"
           onClick={handleCloseMenu}
