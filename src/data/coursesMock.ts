@@ -6,8 +6,9 @@ import pdfURL2 from "../assets/pdf/coltec-programa-2026.pdf";
 export const courses: Course[] = [
   {
     slug: "refuerzo-pre-universitario",
-    inscriptionEnabled: false,
-    inscriptionExpired: false,
+    backendCourseId: 1,
+    inscriptionEnabled: true,
+    inscriptionExpired: true,
     categoria: "Refuerzo académico",
     titulo: "Refuerzo Preuniversitario 2026 (Castellano + Matemáticas)",
     descripcionCorta:
@@ -153,6 +154,7 @@ export const courses: Course[] = [
 
   {
     slug: "refuerzo-colegios-tecnicos-2026",
+    backendCourseId: 2,
     inscriptionEnabled: false,
     inscriptionExpired: false,
     modalidadSubtitle:

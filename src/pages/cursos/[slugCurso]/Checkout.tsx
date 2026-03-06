@@ -16,6 +16,35 @@ const CheckoutPage = () => {
   const display = useDisplay();
   const { create, loading } = useInscriptions();
 
+  const MATRICULA = 50000;
+
+  const coursePrice = course.precio ?? 0;
+  const matricula = MATRICULA;
+  const total = coursePrice + matricula;
+
+  const DEPARTAMENTOS_PY = [
+    "Asunción (Capital)",
+    "Alto Paraguay",
+    "Alto Paraná",
+    "Amambay",
+    "Boquerón",
+    "Caaguazú",
+    "Caazapá",
+    "Canindeyú",
+    "Central",
+    "Concepción",
+    "Cordillera",
+    "Guairá",
+    "Itapúa",
+    "Misiones",
+    "Ñeembucú",
+    "Paraguarí",
+    "Presidente Hayes",
+    "San Pedro",
+  ];
+
+  const courseIdToSend = course.backendCourseId ?? 1;
+
   const [form, setForm] = React.useState({
     nombres: "",
     apellidos: "",
@@ -35,6 +64,7 @@ const CheckoutPage = () => {
 
   const [acceptWhatsapp, setAcceptWhatsapp] = React.useState(false);
   const [success, setSuccess] = React.useState(false);
+  const [inscriptionId, setInscriptionId] = React.useState<number | null>(null);
 
   const updateForm = (key: string, value: string) => {
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -72,7 +102,7 @@ const CheckoutPage = () => {
         ciudad: form.ciudad,
         email: form.email,
         phone: form.telefono,
-        courseId: 1,
+        courseId: courseIdToSend,
         dueDate: dayjs().set("month", 1).toString(),
         whatsappOptIn: acceptWhatsapp,
       });
@@ -80,6 +110,15 @@ const CheckoutPage = () => {
       console.log("respuesta", response);
 
       if (response?.status === 201 || response?.response?.status === 201) {
+        const data = response?.data ?? response?.response?.data ?? response;
+
+        const id =
+          data?.inscription?.id ??
+          data?.data?.inscription?.id ??
+          data?.inscriptionId ??
+          null;
+
+        setInscriptionId(id);
         setSuccess(true);
         return;
       }
@@ -95,7 +134,7 @@ const CheckoutPage = () => {
   };
 
   if (success) {
-    return <CheckoutSuccess />;
+    return <CheckoutSuccess inscriptionId={inscriptionId} />;
   }
 
   return (
@@ -148,11 +187,16 @@ const CheckoutPage = () => {
           value={form.ciudad}
           onChange={(e) => update("ciudad", e.target.value)}
         >
-          <option>Asunción</option>
-          <option>Luque</option>
-          <option>San Lorenzo</option>
-          <option>Capiatá</option>
+          {DEPARTAMENTOS_PY.map((d) => (
+            <option key={d} value={d}>
+              {d}
+            </option>
+          ))}
         </select>
+
+        {/* <span className="ap-text-xs ap-text-gray-500">
+          Seleccioná tu departamento (o Asunción).
+        </span> */}
 
         <span className="ap-text-gray-400 ap-text-sm ap-mt-2">
           Contacto (estudiante o tutor/a)
@@ -186,9 +230,38 @@ const CheckoutPage = () => {
 
           <p className="ap-text-gray-400">{course.titulo}</p>
 
-          <strong className="ap-text-2xl ap-text-[#FFC62D]">
-            {numberFormatGuaranies(course.precio)}
-          </strong>
+          {/* RESUMEN DE PAGO */}
+          <div className="ap-bg-[#111111] ap-border ap-border-[#2B2B2B] ap-rounded-xl ap-p-4 ap-flex ap-flex-col ap-gap-3">
+            <div className="ap-flex ap-justify-between ap-items-center">
+              <span className="ap-text-sm ap-text-gray-400">
+                Precio del curso
+              </span>
+              <span className="ap-text-sm ap-text-white">
+                {numberFormatGuaranies(coursePrice)}
+              </span>
+            </div>
+
+            <div className="ap-flex ap-justify-between ap-items-center">
+              <span className="ap-text-sm ap-text-gray-400">Matrícula</span>
+              <span className="ap-text-sm ap-text-white">
+                {numberFormatGuaranies(matricula)}
+              </span>
+            </div>
+
+            <div className="ap-border-t ap-border-[#2B2B2B] ap-pt-3 ap-flex ap-justify-between ap-items-center">
+              <span className="ap-text-sm ap-text-gray-200">
+                Total a pagar hoy
+              </span>
+              <span className="ap-text-xl ap-font-semibold ap-text-[#FFC62D]">
+                {numberFormatGuaranies(total)}
+              </span>
+            </div>
+
+            <span className="ap-text-xs ap-text-gray-500 ap-leading-5">
+              * El total incluye la matrícula (pago único) + la primera
+              mensualidad.
+            </span>
+          </div>
 
           <div className="ap-bg-[#FFC62D] ap-bg-opacity-20 ap-text-[#FFC62D] ap-text-sm ap-p-3 ap-rounded-md">
             Para completar la inscripción debe aceptar recibir notificaciones
@@ -257,11 +330,20 @@ const CheckoutPage = () => {
       {/* STICKY MOBILE SUMMARY */}
       {display.smAndDown && (
         <div className="ap-fixed ap-bottom-0 ap-left-0 ap-right-0 ap-bg-[#1A1A1A] ap-z-[100000] ap-border-t ap-border-[#3F3F3F] ap-p-4 ap-px-6">
-          <div className="ap-flex ap-justify-between ap-items-center ap-mb-2">
-            <span className="ap-text-white ap-text-sm">{course.titulo}</span>
-            <strong className="ap-text-[#FFC62D]">
-              {numberFormatGuaranies(course.precio)}
-            </strong>
+          <div className="ap-flex ap-flex-col ap-gap-2 ap-mb-3">
+            <div className="ap-flex ap-justify-between ap-items-center">
+              <span className="ap-text-white ap-w-8/12 ap-text-sm ap-font-medium ap-whitespace-nowrap ap-overflow-hidden ap-text-ellipsis">
+                {course.titulo}
+              </span>
+              <span className="ap-text-[#FFC62D] ap-font-semibold">
+                {numberFormatGuaranies(total)}
+              </span>
+            </div>
+
+            <div className="ap-text-xs ap-text-gray-400 ap-flex ap-justify-between">
+              <span>Curso: {numberFormatGuaranies(coursePrice)}</span>
+              <span>Matrícula: {numberFormatGuaranies(matricula)}</span>
+            </div>
           </div>
 
           <label className="ap-flex ap-items-center ap-gap-2 ap-mb-2">

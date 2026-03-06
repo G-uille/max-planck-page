@@ -4,9 +4,20 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import useDisplay from "../../hooks/use-display";
 import { useNavigate } from "react-router-dom";
 
-const CheckoutSuccess = () => {
+type Props = {
+  inscriptionId?: number | null;
+};
+
+const CheckoutSuccess = ({ inscriptionId }: Props) => {
   const display = useDisplay();
   const navigate = useNavigate();
+
+  const INS = inscriptionId ? `INS-${inscriptionId}` : "INS-____";
+  const phoneDirection = "595993581578"; // ✅ tu número real (sin +)
+  const message = `Buenas, tengo la inscripción número ${INS} y quiero realizar el pago de la inscripción.`;
+  const waLink = `https://wa.me/${phoneDirection}?text=${encodeURIComponent(
+    message,
+  )}`;
 
   return (
     <div
@@ -27,16 +38,24 @@ const CheckoutSuccess = () => {
           ¡Inscripción registrada!
         </h1>
 
+        {/* INS CODE */}
+        <div className="ap-flex ap-justify-center">
+          <div className="ap-inline-flex ap-items-center ap-gap-2 ap-border ap-border-[#FFC62D] ap-border-opacity-30 ap-bg-[#FFC62D] ap-bg-opacity-10 ap-text-[#FFC62D] ap-text-sm ap-rounded-full ap-px-4 ap-py-2">
+            <span className="ap-text-gray-300">Nro:</span>
+            <b className="ap-text-white">{INS}</b>
+          </div>
+        </div>
+
         {/* MESSAGE */}
-        <p className="ap-text-gray-400 ap-text-sm">
+        <p className="ap-text-gray-400 ap-text-sm ap-leading-6">
           Recibirás una notificación vía{" "}
           <span className="ap-text-white ap-font-medium">WhatsApp</span> con los
           detalles para realizar el pago.
         </p>
 
-        <div className="ap-bg-[#FFC62D] ap-bg-opacity-20 ap-text-[#FFC62D] ap-text-sm ap-rounded-lg ap-p-4">
-          Si no recibís el mensaje en unos minutos, podés contactarnos y te
-          responderemos a la brevedad.
+        <div className="ap-bg-[#FFC62D] ap-bg-opacity-20 ap-text-[#FFC62D] ap-text-sm ap-rounded-lg ap-p-4 ap-leading-6">
+          Si en <b>40 segundos</b> no te llega el mensaje, contactate con
+          Dirección al <b className="ap-text-white">(+595) 993 581 578</b>.
         </div>
 
         {/* ACTIONS */}
@@ -67,7 +86,7 @@ const CheckoutSuccess = () => {
           <Button
             fullWidth
             variant="outlined"
-            onClick={() => window.open("https://wa.me/595XXXXXXXX", "_blank")}
+            onClick={() => window.open(waLink, "_blank")}
             sx={{
               borderColor: "#3F3F3F",
               color: "white",
@@ -82,8 +101,13 @@ const CheckoutSuccess = () => {
               },
             }}
           >
-            No me llegó el mensaje
+            Contactar Dirección por WhatsApp
           </Button>
+
+          <span className="ap-text-xs ap-text-gray-500">
+            El mensaje se abrirá con tu número de inscripción para agilizar la
+            atención.
+          </span>
         </div>
       </div>
     </div>

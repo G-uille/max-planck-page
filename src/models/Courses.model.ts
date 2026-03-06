@@ -17,6 +17,7 @@ export interface Course {
   categoria: string;
   titulo: string;
   descripcionCorta: string;
+  backendCourseId?: number;
   descripcionLarga: string;
   nivel: "Inicial" | "Bachiller" | "Avanzado";
   duracion: string;
