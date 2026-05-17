@@ -7,6 +7,9 @@ export const courses: Course[] = [
   {
     slug: "refuerzo-pre-universitario",
     backendCourseId: 1,
+    consultWhatsappPhone: "0993581578",
+    consultWhatsappMessage:
+    "Hola, me interesaría saber más sobre el curso de Refuerzo Admisión Colegios Técnicos.",
     inscriptionEnabled: true,
     inscriptionExpired: true,
     categoria: "Refuerzo académico",
@@ -155,6 +158,9 @@ export const courses: Course[] = [
   {
     slug: "refuerzo-colegios-tecnicos-2026",
     backendCourseId: 2,
+    consultWhatsappPhone: "0993581578",
+    consultWhatsappMessage:
+    "Hola, me interesaría saber más sobre el curso de Refuerzo Preuniversitario.",
     inscriptionEnabled: false,
     inscriptionExpired: false,
     modalidadSubtitle:
@@ -326,4 +332,309 @@ export const courses: Course[] = [
       },
     ],
   },
+  {
+  slug: "introduccion-a-la-programacion",
+  backendCourseId: 3,
+  consultWhatsappPhone: "0974135398",
+  consultWhatsappMessage:
+  "Hola, me interesaría saber más sobre el curso de Introducción a la Programación.",
+  inscriptionEnabled: false,
+  inscriptionDisabledLabel: "Inscripción próximamente",
+  inscriptionDisabledMessage:
+    "Las inscripciones para Introducción a la Programación todavía no están habilitadas. Las fechas, horarios e inicio serán comunicados próximamente.",
+
+  categoria: "Programación",
+  titulo: "Introducción a la Programación",
+  descripcionCorta:
+    "Curso inicial para aprender lógica de programación, pensamiento computacional, algoritmos, pseudocódigo y fundamentos de Python.",
+  descripcionLarga:
+    "Este curso está diseñado para estudiantes que desean iniciar en el mundo de la programación desde cero. Se trabaja la lógica computacional, la resolución de problemas, el uso de herramientas básicas, pseudocódigo y los primeros fundamentos de Python, combinando explicación teórica, práctica guiada y ejercicios progresivos.",
+
+  nivel: "Inicial",
+  duracion: "11 semanas",
+  fechaInicioFin: "A definir",
+  dedicacion: "3 a 4 hs semanales",
+  clasesEnVivo: "1 clase semanal de 2 hs",
+  lugar: "A definir",
+  inicioEstimado: "A definir",
+
+  modalidadSubtitle:
+    "Modalidad presencial + virtual, con práctica guiada y acompañamiento.",
+  modalidadNota:
+    "Las fechas de inicio, horarios y modalidad específica serán confirmadas próximamente.",
+  modalidadRows: [
+    {
+      title: "Clase semanal — horario a definir",
+      tag: "A definir",
+      mode: "virtual",
+      desc: "Encuentro semanal para desarrollar contenidos, resolver ejercicios y avanzar con acompañamiento docente.",
+    },
+    {
+      title: "Práctica complementaria",
+      tag: "Virtual",
+      mode: "virtual",
+      desc: "Actividades, ejercicios y materiales de apoyo para reforzar lo trabajado en clase.",
+    },
+  ],
+
+  fechasTip:
+    "Las fechas y horarios serán publicados una vez habilitada la inscripción.",
+  fechasHorarios: [
+    "Fecha de inicio: A definir",
+    "Fecha de finalización: A definir",
+    "Horario de clases: A definir",
+    "Inscripción online: no habilitada por el momento",
+  ],
+
+  requisitos: [
+    "No se requieren conocimientos previos de programación.",
+    "Contar con computadora o notebook para practicar.",
+    "Tener conexión a internet para acceder a materiales digitales.",
+    "Instalar las herramientas indicadas por el docente.",
+  ],
+
+  precio: 0,
+  precioOriginal: 0,
+  descuento: 0,
+
+  fileURL: courseImage,
+
+  modalidad: {
+    enVivo: true,
+    onDemand: true,
+  },
+
+  highlights: [
+    "11 semanas",
+    "Nivel inicial",
+    "1 clase semanal",
+    "3 a 4 hs/semana",
+    "Python básico",
+    "Lógica de programación",
+  ],
+
+  incluye: [
+    "Introducción a la programación desde cero.",
+    "Ejercicios progresivos para desarrollar lógica.",
+    "Uso de pseudocódigo y herramientas iniciales.",
+    "Primeros pasos con Python.",
+    "Proyecto final integrador.",
+  ],
+
+  evaluacion: [
+    "Resolución de ejercicios prácticos.",
+    "Actividades por unidad.",
+    "Correcciones y retroalimentación.",
+    "Proyecto final aplicado.",
+  ],
+
+  programa: [
+    {
+      title: "Semana 1 — Bienvenida al curso e introducción a la programación",
+      description:
+        "Presentación del curso, forma de trabajo, herramientas, qué es programar, qué es un algoritmo y cómo se resuelven problemas paso a paso.",
+    },
+    {
+      title: "Semana 2 — Herramientas fundamentales de la programación",
+      description:
+        "Introducción al pensamiento computacional, uso de pseudocódigo, instrucciones, variables, entrada y salida de datos.",
+    },
+    {
+      title: "Semanas 3 y 4 — Condicionales de programación",
+      description:
+        "Estructuras condicionales, operadores lógicos, toma de decisiones, comparación de valores y resolución de problemas con condiciones.",
+    },
+    {
+      title: "Semanas 5 y 6 — Funciones y organización del código",
+      description:
+        "Concepto de función, reutilización de instrucciones, parámetros, retorno de valores y organización básica de soluciones.",
+    },
+    {
+      title: "Semanas 7, 8, 9 y 10 — Python básico",
+      description:
+        "Primeros pasos con Python: sintaxis básica, variables, tipos de datos, entrada y salida, condicionales, ciclos, acumuladores y ejercicios aplicados.",
+    },
+    {
+      title: "Semana 11 — Proyecto final",
+      description:
+        "Desarrollo de un proyecto integrador sencillo aplicando lógica, condicionales, ciclos, funciones y fundamentos de Python.",
+    },
+  ],
+
+  faqs: [
+    {
+      pregunta: "¿Necesito saber programar antes de iniciar?",
+      respuesta:
+        "No. El curso está pensado para estudiantes sin experiencia previa en programación.",
+    },
+    {
+      pregunta: "¿Qué lenguaje se utiliza?",
+      respuesta:
+        "El curso introduce lógica de programación y fundamentos de Python.",
+    },
+    {
+      pregunta: "¿La inscripción ya está habilitada?",
+      respuesta:
+        "No. Las inscripciones serán habilitadas cuando se confirmen las fechas y horarios.",
+    },
+    {
+      pregunta: "¿Las fechas y horarios ya están definidos?",
+      respuesta:
+        "Todavía no. Por el momento las fechas de inicio, finalización y horarios quedan a definir.",
+    },
+  ],
+},
+{
+  slug: "introduccion-al-desarrollo-web",
+  backendCourseId: 4,
+  consultWhatsappPhone: "0974135398",
+  consultWhatsappMessage:
+  "Hola, me interesaría saber más sobre el curso de Introducción al Desarrollo Web.",
+  inscriptionEnabled: false,
+  inscriptionDisabledLabel: "Inscripción próximamente",
+  inscriptionDisabledMessage:
+    "Las inscripciones para Introducción al Desarrollo Web todavía no están habilitadas. Las fechas, horarios e inicio serán comunicados próximamente.",
+
+  categoria: "Desarrollo Web",
+  titulo: "Introducción al Desarrollo Web",
+  descripcionCorta:
+    "Curso inicial para aprender los fundamentos del desarrollo web: HTML, CSS, diseño responsive, GitHub, despliegue y primeros pasos con JavaScript.",
+  descripcionLarga:
+    "Este curso introduce al estudiante en el desarrollo web desde cero, trabajando la estructura de una página con HTML, estilos con CSS, maquetación responsive, uso básico de GitHub, publicación de sitios y fundamentos de JavaScript para agregar interactividad.",
+
+  nivel: "Inicial",
+  duracion: "11 semanas",
+  fechaInicioFin: "A definir",
+  dedicacion: "3 a 4 hs semanales",
+  clasesEnVivo: "2 clases semanales de 2 hs",
+  lugar: "A definir",
+  inicioEstimado: "A definir",
+
+  modalidadSubtitle:
+    "Modalidad presencial + virtual, con clases prácticas y desarrollo de proyectos.",
+  modalidadNota:
+    "Las fechas de inicio, horarios y modalidad específica serán confirmadas próximamente.",
+  modalidadRows: [
+    {
+      title: "Clases semanales — horario a definir",
+      tag: "A definir",
+      mode: "virtual",
+      desc: "Encuentros para desarrollar contenidos, practicar maquetación y avanzar con acompañamiento docente.",
+    },
+    {
+      title: "Práctica complementaria",
+      tag: "Virtual",
+      mode: "virtual",
+      desc: "Ejercicios, recursos y actividades para reforzar HTML, CSS y JavaScript.",
+    },
+  ],
+
+  fechasTip:
+    "Las fechas y horarios serán publicados una vez habilitada la inscripción.",
+  fechasHorarios: [
+    "Fecha de inicio: A definir",
+    "Fecha de finalización: A definir",
+    "Horario de clases: A definir",
+    "Inscripción online: no habilitada por el momento",
+  ],
+
+  requisitos: [
+    "No se requieren conocimientos previos de desarrollo web.",
+    "Contar con computadora o notebook.",
+    "Tener conexión a internet.",
+    "Instalar Visual Studio Code y navegador actualizado.",
+  ],
+
+  precio: 0,
+  precioOriginal: 0,
+  descuento: 0,
+
+  fileURL: courseImage,
+
+  modalidad: {
+    enVivo: true,
+    onDemand: true,
+  },
+
+  highlights: [
+    "11 semanas",
+    "Nivel inicial",
+    "2 clases semanales",
+    "HTML + CSS",
+    "Responsive Design",
+    "JavaScript básico",
+  ],
+
+  incluye: [
+    "Introducción al mundo web.",
+    "Maquetación con HTML.",
+    "Estilos con CSS.",
+    "Diseño responsive.",
+    "Fundamentos de JavaScript.",
+    "Proyecto final publicado.",
+  ],
+
+  evaluacion: [
+    "Ejercicios prácticos por unidad.",
+    "Correcciones durante el proceso.",
+    "Entrega de avances.",
+    "Proyecto final integrador.",
+  ],
+
+  programa: [
+    {
+      title: "Semana 1 — Conociendo el mundo web y configuración del entorno",
+      description:
+        "Introducción a internet, páginas web, rol del navegador, estructura básica de un proyecto, instalación de herramientas y primeros pasos con Visual Studio Code.",
+    },
+    {
+      title: "Semanas 2 y 3 — HTML",
+      description:
+        "Estructura de documentos HTML, etiquetas principales, textos, enlaces, imágenes, listas, formularios y organización semántica del contenido.",
+    },
+    {
+      title: "Semanas 4 y 5 — CSS",
+      description:
+        "Selectores, colores, tipografías, márgenes, paddings, modelo de caja, estilos reutilizables y diseño visual básico de páginas web.",
+    },
+    {
+      title: "Semanas 6 y 7 — Flexbox y Grid",
+      description:
+        "Maquetación moderna con Flexbox y CSS Grid, distribución de elementos, diseño responsive y adaptación a distintos tamaños de pantalla.",
+    },
+    {
+      title: "Semanas 8, 9 y 10 — JavaScript básico",
+      description:
+        "Introducción a JavaScript, variables, tipos de datos, condicionales, funciones, eventos, manipulación básica del DOM e interactividad en páginas web.",
+    },
+    {
+      title: "Semana 11 — Proyecto final",
+      description:
+        "Desarrollo, revisión y presentación de un sitio web integrador utilizando HTML, CSS, diseño responsive y JavaScript básico.",
+    },
+  ],
+
+  faqs: [
+    {
+      pregunta: "¿Necesito experiencia previa en programación?",
+      respuesta:
+        "No. El curso inicia desde cero y acompaña paso a paso el proceso de creación de páginas web.",
+    },
+    {
+      pregunta: "¿Qué tecnologías se aprenden?",
+      respuesta:
+        "Se trabajan HTML, CSS, diseño responsive, GitHub, despliegue y fundamentos de JavaScript.",
+    },
+    {
+      pregunta: "¿La inscripción ya está habilitada?",
+      respuesta:
+        "No. Las inscripciones serán habilitadas cuando se confirmen las fechas y horarios.",
+    },
+    {
+      pregunta: "¿Las fechas y horarios ya están definidos?",
+      respuesta:
+        "Todavía no. Por el momento las fechas de inicio, finalización y horarios quedan a definir.",
+    },
+  ],
+},
 ];

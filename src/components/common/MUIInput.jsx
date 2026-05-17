@@ -18,7 +18,7 @@ const CustomMUIInput = styled(TextField).withConfig({
 })`
   /* INPUT TEXT */
   & .MuiInputBase-input {
-    color: #ffffff !important;
+    color: #000000 !important;
     font-size: 14px;
     line-height: 1.4;
     padding: 10px 12px !important;
@@ -38,7 +38,7 @@ const CustomMUIInput = styled(TextField).withConfig({
     }
 
     &.Mui-focused {
-      border-color: #ffc62d;
+      border-color: #000000;
       box-shadow: 0 0 0 1px rgba(255, 198, 45, 0.25);
     }
 
@@ -50,7 +50,7 @@ const CustomMUIInput = styled(TextField).withConfig({
 
   /* LABEL */
   & .MuiInputLabel-root {
-    color: rgba(255, 255, 255, 0.6);
+    color: rgba(0, 0, 0, 0.6);
     font-size: 13px;
     transform: translate(12px, 0px) scale(1); /* 🔑 SUBE el label */
     transition: all 0.2s ease;
@@ -60,7 +60,7 @@ const CustomMUIInput = styled(TextField).withConfig({
   /* LABEL SHRINK (cuando hay valor o focus) */
   & .MuiInputLabel-root.MuiInputLabel-shrink {
     transform: translate(12px, -10px) scale(0.85); /* 🔥 más arriba */
-    color: #ffc62d;
+    color: #000000;
   }
 
   /* ERROR */

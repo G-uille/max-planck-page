@@ -1,230 +1,250 @@
-import * as React from "react";
-import { useSelector } from "react-redux";
-import useDisplay from "../../hooks/use-display";
-import contactUs from "../../pages/store/data/contact";
-import logoSVG from "../../assets/svg/logo.svg";
-
+import * as React from 'react';
+import { IconButton, Button } from '@mui/material';
 import {
-  EmailOutlined,
-  PhoneIphoneOutlined,
-  ArrowForward,
-  Instagram,
-  Facebook,
-  Email,
-} from "@mui/icons-material";
-import { IconButton } from "@mui/material";
+    Instagram,
+    Facebook,
+    Email,
+    WhatsApp,
+    ArrowForwardRounded,
+    PlaceRounded,
+} from '@mui/icons-material';
 
-const PRIMARY = "#FFC62D";
-const SECONDARY = "#FDD877";
-
-const normalizeTel = (value?: string) => {
-  if (!value) return "";
-  return value.replace(/[^\d+]/g, "");
-};
-
-type NavItem = { label: string; href: string };
+import logoSVG from '../../assets/svg/logo.svg';
+import contactUs from '../../pages/store/data/contact';
 
 const Footer: React.FC = () => {
-  const display = useDisplay();
-  const isDarkMode = false;
+    const scrollTo = (id: string) => {
+        const section = document.getElementById(id);
+        if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
 
-  const navItems: NavItem[] = [
-    { label: "Inicio", href: "/" },
-    // { label: "Cursos", href: "/cursos" },
-    // si tenés otra sección, agregala acá
-  ];
+    return (
+        <footer className="ap-relative ap-overflow-hidden ap-bg-[#111111] ap-text-white">
+            <div className="ap-absolute ap-inset-0 ap-pointer-events-none ap-bg-[radial-gradient(circle_at_50%_0%,rgba(255,198,45,0.18),transparent_32%)]" />
 
-  const emails = [
-    (contactUs as any).email,
-    (contactUs as any).emailComercial,
-    (contactUs as any).emailSoporte,
-  ].filter(Boolean) as string[];
+            <div className="ap-relative ap-z-10 ap-mx-auto ap-max-w-7xl ap-px-5 ap-py-20">
+                <div className="ap-rounded-[36px] ap-border ap-border-white/10 ap-bg-white/[0.04] ap-p-8 md:ap-p-12">
+                    <div className="ap-grid ap-gap-10 md:ap-grid-cols-[1.15fr_0.85fr] md:ap-items-center">
+                        <div>
+                            <p className="ap-text-sm ap-font-black ap-uppercase ap-tracking-[0.22em] ap-text-primary">
+                                Cursillo Max Planck
+                            </p>
 
-  const tel = normalizeTel((contactUs as any).phoneNumber);
-  const whatsappLink =
-    (contactUs as any).whatsappLink ||
-    (tel ? `https://wa.me/${tel.replace("+", "")}` : "");
+                            <h2 className="ap-mt-5 ap-max-w-3xl ap-text-white ap-font-stack ap-text-4xl ap-font-bold ap-leading-tight ap-tracking-[-0.04em] md:ap-text-6xl">
+                                Aprender también es entrenar.
+                            </h2>
 
-  return (
-    <footer
-      className={`ap-w-full ap-flex ap-flex-col ap-items-center ap-justify-center ${
-        isDarkMode ? "ap-bg-[#111111]" : "ap-bg-[#111111]"
-      }`}
-      style={{
-        background:
-          "radial-gradient(1200px 500px at 20% -20%, rgba(45, 45, 44, 0.22), transparent 60%), radial-gradient(900px 400px at 80% 0%, rgba(44, 44, 44, 0.14), transparent 55%), #000000",
-      }}
-    >
-      {/* TOP GRID */}
-      <div
-        className={`ap-container ap-w-full ${
-          display.smAndDown
-            ? "ap-px-6 ap-pt-14 ap-pb-10"
-            : "ap-px-[8vw] ap-pt-16 ap-pb-12"
-        }`}
-      >
-        <div
-          className={`ap-grid ap-gap-10 ${
-            display.mdAndDown ? "ap-grid-cols-1" : "ap-grid-cols-12"
-          }`}
-        >
-          {/* CTA */}
-          <div className={`${display.mdAndDown ? "" : "ap-col-span-6"}`}>
-            <h3
-              className={`ap-font-stack ap-font-semibold ap-leading-tight ${
-                display.smAndDown ? "ap-text-3xl" : "ap-text-4xl"
-              } ap-text-white`}
-            >
-              ¿Tenés alguna pregunta?
-            </h3>
-            <p className="ap-mt-3 ap-text-sm ap-text-gray-300 ap-max-w-md">
-              Contanos tu duda y te ayudamos a responderlas de inmediato.
-            </p>
+                            <p className="ap-mt-6 ap-max-w-2xl ap-text-base ap-leading-8 ap-text-white/60">
+                                Preparación, práctica y acompañamiento para estudiantes que buscan avanzar con claridad, constancia y mejores herramientas.
+                            </p>
+                        </div>
 
-            <div className="ap-mt-6 ap-flex ap-flex-wrap ap-gap-3">
-              <a
-                href={`tel:${tel}`}
-                className="ap-inline-flex ap-items-center ap-gap-2 ap-rounded-xl ap-px-5 ap-py-3 ap-text-sm ap-font-semibold ap-text-black"
-                style={{
-                  background: PRIMARY,
-                  boxShadow: "0 10px 26px rgba(51,161,253,0.25)",
-                }}
-              >
-                Contactar <ArrowForward sx={{ fontSize: 18 }} />
-              </a>
+                        <div className="ap-flex ap-flex-col ap-gap-4 md:ap-items-end">
+                            <Button
+                                component="a"
+                                href={contactUs?.walink}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                variant="contained"
+                                sx={{
+                                    backgroundColor: '#FFC62D',
+                                    color: '#111111',
+                                    boxShadow: 'none',
+                                    borderRadius: '999px',
+                                    padding: '14px 28px',
+                                    textTransform: 'none',
+                                    fontFamily: 'Poppins',
+                                    fontWeight: 800,
+                                    fontSize: '16px',
+                                    '&:hover': {
+                                        backgroundColor: '#F4B800',
+                                        boxShadow: 'none',
+                                    },
+                                }}
+                            >
+                                Consultar inscripción
+                                <ArrowForwardRounded sx={{ marginLeft: '8px' }} />
+                            </Button>
 
-              {/* {!!whatsappLink && (
-                                <a
-                                    href={whatsappLink}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="ap-inline-flex ap-items-center ap-gap-2 ap-rounded-xl ap-px-5 ap-py-3 ap-text-sm ap-font-semibold ap-text-white"
-                                    style={{
-                                        background: 'rgba(194,240,245,0.10)',
-                                        boxShadow:
-                                            '0 0 0 1px rgba(51,161,253,0.20)',
-                                    }}
-                                >
-                                    WhatsApp
+                            <p className="ap-text-sm ap-text-white/45">
+                                Atención personalizada por WhatsApp.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="ap-mt-16 ap-grid ap-gap-12 md:ap-grid-cols-[1.1fr_0.8fr_0.8fr_0.8fr]">
+                    <div>
+                        <img
+                            src={logoSVG}
+                            alt="Cursillo Max Planck"
+                            className="ap-h-16"
+                        />
+
+                        <p className="ap-mt-6 ap-max-w-sm ap-text-base ap-leading-8 ap-text-white/55">
+                            Un espacio educativo con trayectoria, acompañamiento y recursos para fortalecer el proceso de aprendizaje.
+                        </p>
+
+                        <div className="ap-mt-6 ap-inline-flex ap-items-center ap-gap-2 ap-rounded-full ap-border ap-border-white/10 ap-bg-white/[0.06] ap-px-4 ap-py-3 ap-text-sm ap-font-medium">
+                            <PlaceRounded sx={{ fontSize: 18, color: '#FFC62D' }} />
+                            Luque, Paraguay
+                        </div>
+                    </div>
+
+                    <FooterColumn
+                        title="Programas"
+                        links={[
+                            { label: 'Refuerzo Preuniversitario', id: 'teach' },
+                            { label: 'Colegios Técnicos', id: 'teach' },
+                            { label: 'Modalidades', id: 'modes' },
+                            { label: 'Aula Virtual', id: 'teach' },
+                        ]}
+                        onClick={scrollTo}
+                    />
+
+                    <FooterColumn
+                        title="Institución"
+                        links={[
+                            { label: 'Sobre nosotros', id: 'about' },
+                            { label: 'Preguntas frecuentes', id: 'faq' },
+                            { label: 'Contacto', id: 'contact' },
+                        ]}
+                        onClick={scrollTo}
+                    />
+
+                    <div>
+                        <h3 className="ap-text-sm ap-font-black ap-uppercase ap-tracking-[0.18em] ap-text-white">
+                            Contacto
+                        </h3>
+
+                        <p className="ap-mt-5 ap-text-sm ap-leading-6 ap-text-white/55">
+                            {contactUs?.email}
+                        </p>
+
+                        <div className="ap-mt-5 ap-flex ap-items-center ap-gap-2">
+                            {contactUs?.instagramLink && (
+                                <a href={contactUs.instagramLink} target="_blank" rel="noopener noreferrer">
+                                    <IconButton className="mp-footer-icon">
+                                        <Instagram />
+                                    </IconButton>
                                 </a>
-                            )} */}
+                            )}
+
+                            {contactUs?.facebookLink && (
+                                <a href={contactUs.facebookLink} target="_blank" rel="noopener noreferrer">
+                                    <IconButton className="mp-footer-icon">
+                                        <Facebook />
+                                    </IconButton>
+                                </a>
+                            )}
+
+                            {contactUs?.email && (
+                                <a href={`mailto:${contactUs.email}`} target="_blank" rel="noopener noreferrer">
+                                    <IconButton className="mp-footer-icon">
+                                        <Email />
+                                    </IconButton>
+                                </a>
+                            )}
+
+                            {contactUs?.walink && (
+                                <a href={contactUs.walink} target="_blank" rel="noopener noreferrer">
+                                    <IconButton className="mp-footer-icon">
+                                        <WhatsApp />
+                                    </IconButton>
+                                </a>
+                            )}
+                        </div>
+                    </div>
+                </div>
+
+                <div className="ap-mt-16 ap-flex ap-flex-col ap-gap-4 ap-border-t ap-border-white/10 ap-pt-8 md:ap-flex-row md:ap-items-center md:ap-justify-between">
+                    <p className="ap-text-sm ap-text-white/42">
+                        © 2026 Cursillo Max Planck. Todos los derechos reservados.
+                    </p>
+
+                    <p className="ap-text-sm ap-text-white/42">
+                        Desarrollado por{' '}
+                        <a
+                            href="https://stackparaguay.com"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="ap-font-bold ap-text-primary ap-no-underline"
+                        >
+                            Stack Paraguay
+                        </a>
+                    </p>
+                </div>
             </div>
-          </div>
 
-          {/* NAV */}
-          <div className={`${display.mdAndDown ? "" : "ap-col-span-3"}`}>
-            <h4 className="ap-text-white ap-font-semibold ap-mb-4">
-              Navegación
-            </h4>
-            <ul className="ap-flex ap-flex-col ap-gap-2">
-              {navItems.map((item) => (
-                <li key={item.href}>
-                  <a
-                    href={item.href}
-                    className="ap-text-sm ap-text-gray-300 hover:ap-text-white ap-transition"
-                  >
-                    {item.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
+            <style>
+                {`
+                    .mp-footer-icon {
+                        width: 46px !important;
+                        height: 46px !important;
+                        background: rgba(255,255,255,0.06) !important;
+                        color: #FFC62D !important;
+                        border: 1px solid rgba(255,255,255,0.10) !important;
+                        transition: transform 180ms ease, background 180ms ease !important;
+                    }
 
-          {/* CONTACT */}
-          <div className={`${display.mdAndDown ? "" : "ap-col-span-3"}`}>
-            <h4 className="ap-text-white ap-font-semibold ap-mb-4">Contacto</h4>
+                    .mp-footer-icon:hover {
+                        background: #FFC62D !important;
+                        color: #111111 !important;
+                        transform: translateY(-3px);
+                    }
 
-            <div className="ap-flex ap-flex-col ap-gap-3">
-              {emails.map((mail) => (
-                <a
-                  key={mail}
-                  href={`mailto:${mail}`}
-                  className="ap-inline-flex ap-items-center ap-gap-2 ap-text-sm ap-text-gray-300 hover:ap-text-white ap-transition"
-                >
-                  <EmailOutlined sx={{ fontSize: 18, color: SECONDARY }} />
-                  {mail}
-                </a>
-              ))}
+                    .mp-footer-link {
+                        border: 0;
+                        background: transparent;
+                        padding: 0;
+                        font-family: Poppins, sans-serif;
+                        font-size: 15px;
+                        color: rgba(255,255,255,0.58);
+                        cursor: pointer;
+                        text-align: left;
+                        transition: color 180ms ease, transform 180ms ease;
+                    }
 
-              {!!tel && (
-                <a
-                  href={`tel:${tel}`}
-                  className="ap-inline-flex ap-items-center ap-gap-2 ap-text-sm ap-text-gray-300 hover:ap-text-white ap-transition"
-                >
-                  <PhoneIphoneOutlined
-                    sx={{ fontSize: 18, color: SECONDARY }}
-                  />
-                  {(contactUs as any).phoneNumber}
-                </a>
-              )}
+                    .mp-footer-link:hover {
+                        color: #FFC62D;
+                        transform: translateX(3px);
+                    }
+                `}
+            </style>
+        </footer>
+    );
+};
+
+type FooterColumnProps = {
+    title: string;
+    links: {
+        label: string;
+        id: string;
+    }[];
+    onClick: (id: string) => void;
+};
+
+const FooterColumn: React.FC<FooterColumnProps> = ({ title, links, onClick }) => {
+    return (
+        <div>
+            <h3 className="ap-text-sm ap-font-black ap-uppercase ap-tracking-[0.18em] ap-text-white">
+                {title}
+            </h3>
+
+            <div className="ap-mt-5 ap-flex ap-flex-col ap-gap-3">
+                {links.map((link) => (
+                    <button
+                        key={link.label}
+                        type="button"
+                        onClick={() => onClick(link.id)}
+                        className="mp-footer-link"
+                    >
+                        {link.label}
+                    </button>
+                ))}
             </div>
-            <div
-              className={`ap-flex ap-justify-start ap-mt-3 ap-ml-[-8px] ap-items-center ap-w-full ${display.mdAndDown ? "ap-gap-0" : "ap-gap-0"}`}
-            >
-              <a
-                href={contactUs.instagramLink}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <IconButton>
-                  <Instagram sx={{ color: SECONDARY }} />
-                </IconButton>
-              </a>
-              <a
-                href={contactUs.facebookLink}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <IconButton>
-                  <Facebook sx={{ color: SECONDARY }} />
-                </IconButton>
-              </a>
-              <a
-                href={`mailto:${contactUs.email}`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <IconButton>
-                  <Email sx={{ color: SECONDARY }} />
-                </IconButton>
-              </a>
-            </div>
-          </div>
         </div>
-
-        {/* DIVIDER */}
-        <div
-          className="ap-mt-12 ap-w-full ap-h-px"
-          style={{ background: "rgba(255,255,255,0.10)" }}
-        />
-      </div>
-
-      {/* LOGO CENTER */}
-      <div className="ap-w-full ap-flex ap-justify-center ap-items-center ap-py-10">
-        <img src={logoSVG} alt="logo" className="ap-h-16 ap-opacity-95" />
-      </div>
-
-      {/* CREDITS */}
-      <div
-        className="ap-w-full ap-text-center ap-py-5"
-        style={{ background: "rgba(255,255,255,0.04)" }}
-      >
-        <p className="ap-text-xs ap-text-gray-300">
-          © 2026{" "}
-          <a
-            href="https://stackparaguay.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:ap-text-[#FFC62D] ap-transition !ap-text-[#FFC62D]"
-            // style={{ color: PRIMARY }}
-          >
-            Stack Paraguay
-          </a>
-          . Todos los derechos reservados.
-        </p>
-      </div>
-    </footer>
-  );
+    );
 };
 
 export default Footer;

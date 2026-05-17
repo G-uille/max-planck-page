@@ -9,18 +9,25 @@ import useInscriptions from "../../..//hooks/use-inscriptions";
 import { toast, ToastContainer } from "react-toastify";
 import dayjs from "dayjs";
 import CheckoutSuccess from "../../../components/courses/CheckoutSuccess";
+import {
+  getCourseView,
+  getEnrollmentDisabledMessage,
+  isCourseEnrollmentEnabled,
+} from "../../../utils/courseView";
 
 const CheckoutPage = () => {
   const { slugCurso } = useParams();
-  const course = courses.find((c) => c.slug === slugCurso);
+  const course = courses.find((c: any) => c.slug === slugCurso);
   const display = useDisplay();
   const { create, loading } = useInscriptions();
 
   const MATRICULA = 50000;
 
-  const coursePrice = course.precio ?? 0;
+  const item = course ? getCourseView(course) : null;
+  const coursePrice = item?.price ?? 0;
   const matricula = MATRICULA;
   const total = coursePrice + matricula;
+  const courseIdToSend = course?.backendCourseId ?? 1;
 
   const DEPARTAMENTOS_PY = [
     "Asunción (Capital)",
@@ -43,13 +50,11 @@ const CheckoutPage = () => {
     "San Pedro",
   ];
 
-  const courseIdToSend = course.backendCourseId ?? 1;
-
   const [form, setForm] = React.useState({
     nombres: "",
     apellidos: "",
     cedula: "",
-    ciudad: "Asunción",
+    ciudad: "Asunción (Capital)",
     email: "",
     telefono: "",
   });
@@ -74,10 +79,6 @@ const CheckoutPage = () => {
     setErrors((prev) => ({ ...prev, [key]: !isValid }));
   };
 
-  if (!course) return null;
-
-  const update = (k: string, v: any) => setForm((p) => ({ ...p, [k]: v }));
-
   const isFormValid =
     Object.values(errors).every((e) => e === false) &&
     Object.values(form).every(
@@ -86,7 +87,7 @@ const CheckoutPage = () => {
     acceptWhatsapp;
 
   const inputBase =
-    "ap-w-full ap-bg-[#1F1F1F] ap-border ap-border-[#3F3F3F] ap-rounded-md ap-px-3 ap-py-2 ap-text-sm ap-text-white focus:ap-outline-none focus:ap-border-[#FFC62D]";
+    "ap-w-full ap-bg-[#FFFDF7] ap-border ap-border-[#DED4BB] ap-rounded-xl ap-px-4 ap-py-3 ap-text-sm ap-text-[#111111] focus:ap-outline-none focus:ap-border-[#FFC730]";
 
   const onSubmit = async () => {
     try {
@@ -107,8 +108,6 @@ const CheckoutPage = () => {
         whatsappOptIn: acceptWhatsapp,
       });
 
-      console.log("respuesta", response);
-
       if (response?.status === 201 || response?.response?.status === 201) {
         const data = response?.data ?? response?.response?.data ?? response;
 
@@ -122,9 +121,9 @@ const CheckoutPage = () => {
         setSuccess(true);
         return;
       }
-    } catch (error) {
-      console.log("este es el error", error.toString());
 
+      toast.error("No se pudo completar la inscripción");
+    } catch (error: any) {
       toast.error(
         error?.response?.data?.message ??
           error?.message ??
@@ -133,269 +132,371 @@ const CheckoutPage = () => {
     }
   };
 
+  if (!course || !item) {
+    return (
+      <div className="ap-bg-[#F3EEDC] ap-min-h-screen ap-flex ap-items-center ap-justify-center">
+        <p className="ap-text-[#111111] ap-font-semibold">Curso no encontrado</p>
+      </div>
+    );
+  }
+
+  if (!course) {
+  return (
+    <div className="ap-bg-[#F3EEDC] ap-min-h-screen ap-flex ap-items-center ap-justify-center ap-px-4">
+      <div className="ap-bg-[#FFFDF7] ap-border ap-border-[#DDD3B8] ap-rounded-3xl ap-p-8 ap-text-center ap-max-w-md">
+        <h1 className="ap-text-[#111111] ap-text-2xl ap-font-extrabold">
+          Curso no encontrado
+        </h1>
+
+        <p className="ap-text-[#5D574A] ap-text-sm ap-leading-6 ap-mt-3">
+          El curso solicitado no existe o ya no está disponible.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+  if (!isCourseEnrollmentEnabled(course)) {
+    return (
+      <div className="ap-bg-[#F3EEDC] ap-min-h-screen ap-flex ap-items-center ap-justify-center ap-px-4">
+        <div className="ap-bg-[#FFFDF7] ap-border ap-border-[#DDD3B8] ap-rounded-3xl ap-p-8 ap-text-center ap-max-w-md ap-shadow-[0_24px_70px_rgba(70,55,20,0.12)]">
+          <span className="ap-inline-flex ap-bg-[#FFF1B8] ap-text-[#8A6A00] ap-border ap-border-[#FFE27A] ap-text-xs ap-font-extrabold ap-rounded-full ap-px-3 ap-py-1">
+            Inscripción no habilitada
+          </span>
+
+          <h1 className="ap-text-[#111111] ap-text-2xl ap-font-extrabold ap-mt-4">
+            Este curso todavía no permite inscripción online
+          </h1>
+
+          <p className="ap-text-[#5D574A] ap-text-sm ap-leading-6 ap-mt-3">
+            {getEnrollmentDisabledMessage(course)}
+          </p>
+
+          <a
+            href="/cursos"
+            className="ap-mt-6 ap-inline-flex ap-items-center ap-justify-center ap-bg-[#FFC730] ap-text-[#111111] ap-font-extrabold ap-rounded-full ap-px-6 ap-py-3"
+          >
+            Volver a cursos
+          </a>
+        </div>
+      </div>
+    );
+  }
+
   if (success) {
     return <CheckoutSuccess inscriptionId={inscriptionId} />;
   }
 
   return (
-    <div
-      className={`ap-bg-[#111111]  ap-pt-6 ${
-        display.smAndDown
-          ? "ap-px-4 ap-pb-32"
-          : "ap-px-[18vw] ap-grid ap-grid-cols-2 ap-gap-8"
-      }`}
-    >
-      {/* FORM */}
-      <div className="ap-bg-[#282828] ap-bg-opacity-55 ap-border ap-border-[#3F3F3F] ap-rounded-xl ap-p-6 ap-flex ap-flex-col ap-gap-4">
-        <h1 className="ap-text-white ap-text-lg ap-font-semibold">
-          Tu inscripción
-        </h1>
+    <>
+      <div
+        className={`ap-bg-[#F3EEDC] ap-min-h-screen ap-pt-8 ${
+          display.smAndDown
+            ? "ap-px-4 ap-pb-40"
+            : "ap-px-[10vw] ap-grid ap-grid-cols-[minmax(0,1fr)_420px] ap-gap-8 ap-items-start"
+        }`}
+      >
+        <div className="ap-bg-[#FFFDF7] ap-border ap-border-[#DDD3B8] ap-rounded-3xl ap-p-6 md:ap-p-8 ap-flex ap-flex-col ap-gap-5 ap-shadow-[0_24px_70px_rgba(70,55,20,0.12)]">
+          <div>
+            <span className="ap-inline-flex ap-bg-[#FFC730] ap-text-[#111111] ap-text-xs ap-font-extrabold ap-rounded-full ap-px-4 ap-py-2">
+              Inscripción online
+            </span>
 
-        <span className="ap-text-gray-400 ap-text-sm">
-          Datos del estudiante
-        </span>
+            <h1 className="ap-text-[#111111] ap-text-2xl md:ap-text-3xl ap-font-extrabold ap-mt-4">
+              Tu inscripción
+            </h1>
 
-        <MUIInput
-          label="Nombres del estudiante a inscribir *"
-          value={form.nombres}
-          rules={["required", "isAlphabet"]}
-          filledColor="#1F1F1F"
-          onChange={(e) => updateForm("nombres", e.target.value)}
-          onChangeError={(isValid) => updateError("nombres", isValid)}
-        />
+            <p className="ap-text-[#5D574A] ap-text-sm ap-leading-6 ap-mt-2">
+              Completá los datos del estudiante y del contacto responsable para
+              registrar la inscripción al programa.
+            </p>
+          </div>
 
-        <MUIInput
-          label="Apellidos del estudiante a inscribir *"
-          value={form.apellidos}
-          rules={["required", "isAlphabet"]}
-          filledColor="#1F1F1F"
-          onChange={(e) => updateForm("apellidos", e.target.value)}
-          onChangeError={(isValid) => updateError("apellidos", isValid)}
-        />
+          <div className="ap-h-px ap-bg-[#E7DEC8]" />
 
-        <MUIInput
-          label="Cédula del estudiante a inscribir *"
-          value={form.cedula}
-          rules={["required", "isNumber", "minLength"]}
-          filledColor="#1F1F1F"
-          onChange={(e) => updateForm("cedula", e.target.value)}
-          onChangeError={(isValid) => updateError("cedula", isValid)}
-        />
+          <span className="ap-text-[#8A6A00] ap-text-sm ap-font-extrabold ap-uppercase ap-tracking-[0.16em]">
+            Datos del estudiante
+          </span>
 
-        <select
-          className={inputBase}
-          value={form.ciudad}
-          onChange={(e) => update("ciudad", e.target.value)}
-        >
-          {DEPARTAMENTOS_PY.map((d) => (
-            <option key={d} value={d}>
-              {d}
-            </option>
-          ))}
-        </select>
+          <MUIInput
+            label="Nombres del estudiante a inscribir *"
+            value={form.nombres}
+            rules={["required", "isAlphabet"]}
+            filledColor="#FFFDF7"
+            onChange={(e) => updateForm("nombres", e.target.value)}
+            onChangeError={(isValid) => updateError("nombres", isValid)}
+          />
 
-        {/* <span className="ap-text-xs ap-text-gray-500">
-          Seleccioná tu departamento (o Asunción).
-        </span> */}
+          <MUIInput
+            label="Apellidos del estudiante a inscribir *"
+            value={form.apellidos}
+            rules={["required", "isAlphabet"]}
+            filledColor="#FFFDF7"
+            onChange={(e) => updateForm("apellidos", e.target.value)}
+            onChangeError={(isValid) => updateError("apellidos", isValid)}
+          />
 
-        <span className="ap-text-gray-400 ap-text-sm ap-mt-2">
-          Contacto (estudiante o tutor/a)
-        </span>
+          <MUIInput
+            label="Cédula del estudiante a inscribir *"
+            value={form.cedula}
+            rules={["required", "isNumber", "minLength"]}
+            filledColor="#FFFDF7"
+            onChange={(e) => updateForm("cedula", e.target.value)}
+            onChangeError={(isValid) => updateError("cedula", isValid)}
+          />
 
-        <MUIInput
-          label="Correo electrónico *"
-          value={form.email}
-          rules={["required", "email"]}
-          filledColor="#1F1F1F"
-          onChange={(e) => updateForm("email", e.target.value)}
-          onChangeError={(isValid) => updateError("email", isValid)}
-        />
+          <div className="ap-flex ap-flex-col ap-gap-2">
+            <label className="ap-text-sm ap-text-[#3C362B] ap-font-semibold">
+              Departamento / ciudad *
+            </label>
 
-        <MUIInput
-          label="Teléfono *"
-          value={form.telefono}
-          rules={["required", "phoneNumber"]}
-          filledColor="#1F1F1F"
-          onChange={(e) => updateForm("telefono", e.target.value)}
-          onChangeError={(isValid) => updateError("telefono", isValid)}
-        />
+            <select
+              className={inputBase}
+              value={form.ciudad}
+              onChange={(e) => updateForm("ciudad", e.target.value)}
+            >
+              {DEPARTAMENTOS_PY.map((d) => (
+                <option key={d} value={d}>
+                  {d}
+                </option>
+              ))}
+            </select>
+          </div>
 
-        {display.smAndDown && <div className="ap-py-8" />}
+          <div className="ap-h-px ap-bg-[#E7DEC8] ap-my-1" />
+
+          <span className="ap-text-[#8A6A00] ap-text-sm ap-font-extrabold ap-uppercase ap-tracking-[0.16em]">
+            Contacto del estudiante o tutor/a
+          </span>
+
+          <MUIInput
+            label="Correo electrónico *"
+            value={form.email}
+            rules={["required", "email"]}
+            filledColor="#FFFDF7"
+            onChange={(e) => updateForm("email", e.target.value)}
+            onChangeError={(isValid) => updateError("email", isValid)}
+          />
+
+          <MUIInput
+            label="Teléfono *"
+            value={form.telefono}
+            rules={["required", "phoneNumber"]}
+            filledColor="#FFFDF7"
+            onChange={(e) => updateForm("telefono", e.target.value)}
+            onChangeError={(isValid) => updateError("telefono", isValid)}
+          />
+
+          {display.smAndDown && <div className="ap-py-8" />}
+        </div>
+
+        {!display.smAndDown && (
+          <aside className="ap-sticky ap-top-28 ap-bg-[#FFFDF7] ap-text-[#111111] ap-border ap-border-[#DDD3B8] ap-rounded-3xl ap-p-6 ap-flex ap-flex-col ap-gap-4 ap-shadow-[0_24px_70px_rgba(70,55,20,0.16)]">
+            <div>
+              <span className="ap-inline-flex ap-bg-[#FFF1B8] ap-text-[#8A6A00] ap-border ap-border-[#FFE27A] ap-text-xs ap-font-extrabold ap-rounded-full ap-px-3 ap-py-1">
+                Resumen
+              </span>
+
+              <h3 className="ap-text-2xl ap-font-extrabold ap-mt-4">
+                Resumen del pedido
+              </h3>
+
+              <p className="ap-text-[#5D574A] ap-text-sm ap-leading-6 ap-mt-2">
+                Revisá el detalle del pago inicial para completar la
+                inscripción.
+              </p>
+            </div>
+
+            <div className="ap-bg-[#F4EEDC] ap-border ap-border-[#DED4BB] ap-rounded-2xl ap-p-4 ap-flex ap-flex-col ap-gap-3">
+              <p className="ap-text-[#111111] ap-font-extrabold ap-leading-6">
+                {item.title}
+              </p>
+
+              <div className="ap-flex ap-justify-between ap-items-center">
+                <span className="ap-text-sm ap-text-[#6D6658]">
+                  Precio del curso
+                </span>
+                <span className="ap-text-sm ap-font-extrabold ap-text-[#111111]">
+                  {numberFormatGuaranies(coursePrice)}
+                </span>
+              </div>
+
+              <div className="ap-flex ap-justify-between ap-items-center">
+                <span className="ap-text-sm ap-text-[#6D6658]">Matrícula</span>
+                <span className="ap-text-sm ap-font-extrabold ap-text-[#111111]">
+                  {numberFormatGuaranies(matricula)}
+                </span>
+              </div>
+
+              <div className="ap-border-t ap-border-[#D8D0B8] ap-pt-4 ap-flex ap-justify-between ap-items-center">
+                <span className="ap-text-sm ap-font-bold ap-text-[#3C362B]">
+                  Total a pagar hoy
+                </span>
+
+                <span className="ap-text-2xl ap-font-extrabold ap-text-[#111111]">
+                  {numberFormatGuaranies(total)}
+                </span>
+              </div>
+
+              <span className="ap-text-xs ap-text-[#6D6658] ap-leading-5">
+                * El total incluye la matrícula, que es un pago único, más la
+                primera mensualidad.
+              </span>
+            </div>
+
+            <div className="ap-bg-[#FFF8D6] ap-text-[#3C362B] ap-border ap-border-[#FFE27A] ap-rounded-2xl ap-p-4">
+              <p className="ap-text-sm ap-font-extrabold ap-text-[#8A6A00]">
+                Importante
+              </p>
+
+              <p className="ap-text-xs ap-leading-5 ap-mt-1">
+                Para completar la inscripción debe aceptar recibir
+                notificaciones vía WhatsApp.
+              </p>
+            </div>
+
+            <label className="ap-flex ap-items-start ap-gap-2">
+              <Checkbox
+                checked={acceptWhatsapp}
+                onChange={(e) => setAcceptWhatsapp(e.target.checked)}
+                sx={{
+                  color: "#8A6A00",
+                  padding: "0",
+                  marginTop: "2px",
+                  "&.Mui-checked": { color: "#8A6A00" },
+                }}
+              />
+
+              <span className="ap-text-sm ap-text-[#3C362B] ap-leading-5">
+                Acepto recibir notificaciones por WhatsApp sobre mi inscripción,
+                horarios y materiales.
+              </span>
+            </label>
+
+            <Button
+              fullWidth
+              type="button"
+              disabled={!isFormValid || loading}
+              variant="contained"
+              onClick={onSubmit}
+              sx={{
+                backgroundColor: isFormValid ? "#FFC730" : "#DED4BB",
+                color: isFormValid ? "#111111" : "#8D8573",
+                border: isFormValid ? "1px solid #F3BE00" : "1px solid #CFC4A8",
+                boxShadow: "none",
+                textTransform: "none",
+                fontFamily: "Poppins",
+                fontSize: "14px",
+                borderRadius: "999px",
+                fontWeight: 800,
+                padding: "13px",
+                cursor: isFormValid ? "pointer" : "not-allowed",
+                transition: "all .2s ease",
+                "&:hover": {
+                  backgroundColor: isFormValid ? "#FFD24A" : "#DED4BB",
+                  boxShadow: "none",
+                },
+                "&.Mui-disabled": {
+                  backgroundColor: "#DED4BB",
+                  color: "#8D8573",
+                },
+              }}
+            >
+              <span className="ap-flex ap-items-center ap-justify-center ap-gap-2">
+                {loading && (
+                  <CircularProgress size={18} sx={{ color: "#8A6A00" }} />
+                )}
+                {!loading && <span>Completar inscripción</span>}
+              </span>
+            </Button>
+
+            {!isFormValid && (
+              <span className="ap-text-xs ap-text-[#6D6658]">
+                Complete todos los campos obligatorios y acepte el envío por
+                WhatsApp.
+              </span>
+            )}
+          </aside>
+        )}
+
+        {display.smAndDown && (
+          <div className="ap-fixed ap-bottom-0 ap-left-0 ap-right-0 ap-bg-[#FFFDF7] ap-z-[100000] ap-border-t ap-border-[#DDD3B8] ap-p-4 ap-px-6 ap-shadow-[0_-12px_35px_rgba(70,55,20,0.12)]">
+            <div className="ap-flex ap-flex-col ap-gap-2 ap-mb-3">
+              <div className="ap-flex ap-justify-between ap-items-center ap-gap-3">
+                <span className="ap-text-[#111111] ap-w-8/12 ap-text-sm ap-font-bold ap-whitespace-nowrap ap-overflow-hidden ap-text-ellipsis">
+                  {item.title}
+                </span>
+
+                <span className="ap-text-[#8A6A00] ap-font-extrabold">
+                  {numberFormatGuaranies(total)}
+                </span>
+              </div>
+
+              <div className="ap-text-xs ap-text-[#6D6658] ap-flex ap-justify-between ap-gap-3">
+                <span>Curso: {numberFormatGuaranies(coursePrice)}</span>
+                <span>Matrícula: {numberFormatGuaranies(matricula)}</span>
+              </div>
+            </div>
+
+            <label className="ap-flex ap-items-start ap-gap-2 ap-mb-3">
+              <Checkbox
+                checked={acceptWhatsapp}
+                onChange={(e) => setAcceptWhatsapp(e.target.checked)}
+                sx={{
+                  color: "#8A6A00",
+                  padding: "0",
+                  marginTop: "2px",
+                  "&.Mui-checked": { color: "#8A6A00" },
+                }}
+              />
+
+              <span className="ap-text-xs ap-text-[#3C362B] ap-leading-4">
+                Acepto recibir notificaciones por WhatsApp.
+              </span>
+            </label>
+
+            <Button
+              fullWidth
+              disabled={!isFormValid || loading}
+              variant="contained"
+              type="button"
+              onClick={onSubmit}
+              sx={{
+                backgroundColor: isFormValid ? "#FFC730" : "#DED4BB",
+                color: isFormValid ? "#111111" : "#8D8573",
+                border: isFormValid ? "1px solid #F3BE00" : "1px solid #CFC4A8",
+                boxShadow: "none",
+                textTransform: "none",
+                fontFamily: "Poppins",
+                fontSize: "14px",
+                borderRadius: "999px",
+                fontWeight: 800,
+                padding: "12px",
+                cursor: isFormValid ? "pointer" : "not-allowed",
+                transition: "all .2s ease",
+                "&:hover": {
+                  backgroundColor: isFormValid ? "#FFD24A" : "#DED4BB",
+                  boxShadow: "none",
+                },
+                "&.Mui-disabled": {
+                  backgroundColor: "#DED4BB",
+                  color: "#8D8573",
+                },
+              }}
+            >
+              <span className="ap-flex ap-items-center ap-justify-center ap-gap-2">
+                {loading && (
+                  <CircularProgress size={18} sx={{ color: "#8A6A00" }} />
+                )}
+                {!loading && <span>Completar inscripción</span>}
+              </span>
+            </Button>
+          </div>
+        )}
       </div>
 
-      {/* SUMMARY DESKTOP */}
-      {!display.smAndDown && (
-        <aside className="ap-bg-[#282828] ap-bg-opacity-55 ap-border ap-border-[#3F3F3F] ap-rounded-xl ap-p-6 ap-flex ap-flex-col ap-gap-4">
-          <h3 className="ap-text-white ap-font-semibold">Resumen del pedido</h3>
-
-          <p className="ap-text-gray-400">{course.titulo}</p>
-
-          {/* RESUMEN DE PAGO */}
-          <div className="ap-bg-[#111111] ap-border ap-border-[#2B2B2B] ap-rounded-xl ap-p-4 ap-flex ap-flex-col ap-gap-3">
-            <div className="ap-flex ap-justify-between ap-items-center">
-              <span className="ap-text-sm ap-text-gray-400">
-                Precio del curso
-              </span>
-              <span className="ap-text-sm ap-text-white">
-                {numberFormatGuaranies(coursePrice)}
-              </span>
-            </div>
-
-            <div className="ap-flex ap-justify-between ap-items-center">
-              <span className="ap-text-sm ap-text-gray-400">Matrícula</span>
-              <span className="ap-text-sm ap-text-white">
-                {numberFormatGuaranies(matricula)}
-              </span>
-            </div>
-
-            <div className="ap-border-t ap-border-[#2B2B2B] ap-pt-3 ap-flex ap-justify-between ap-items-center">
-              <span className="ap-text-sm ap-text-gray-200">
-                Total a pagar hoy
-              </span>
-              <span className="ap-text-xl ap-font-semibold ap-text-[#FFC62D]">
-                {numberFormatGuaranies(total)}
-              </span>
-            </div>
-
-            <span className="ap-text-xs ap-text-gray-500 ap-leading-5">
-              * El total incluye la matrícula (pago único) + la primera
-              mensualidad.
-            </span>
-          </div>
-
-          <div className="ap-bg-[#FFC62D] ap-bg-opacity-20 ap-text-[#FFC62D] ap-text-sm ap-p-3 ap-rounded-md">
-            Para completar la inscripción debe aceptar recibir notificaciones
-            vía WhatsApp.
-          </div>
-
-          <label className="ap-flex ap-items-center ap-gap-2">
-            <Checkbox
-              checked={acceptWhatsapp}
-              onChange={(e) => setAcceptWhatsapp(e.target.checked)}
-              sx={{
-                color: "rgba(255,255,255,0.6)",
-                "&.Mui-checked": { color: "#FFC62D" },
-              }}
-            />
-
-            <span className="ap-text-sm ap-text-white">
-              Acepto recibir notificaciones por WhatsApp
-            </span>
-          </label>
-
-          <Button
-            fullWidth
-            type="button"
-            disabled={!isFormValid || loading}
-            variant="contained"
-            onClick={onSubmit}
-            sx={{
-              backgroundColor: isFormValid ? "#FFC62D" : "#3A3A3A",
-              color: isFormValid ? "#000" : "rgba(255,255,255,0.45)",
-              border: isFormValid ? "1px solid #FDD877" : "1px solid #4A4A4A",
-              boxShadow: "none",
-              textTransform: "none",
-              fontFamily: "Poppins",
-              fontSize: "14px",
-              borderRadius: "10px",
-              padding: "10px",
-              cursor: isFormValid ? "pointer" : "not-allowed",
-              transition: "all .2s ease",
-              "&:hover": {
-                backgroundColor: isFormValid ? "#FFD24A" : "#3A3A3A",
-                boxShadow: "none",
-              },
-              "&.Mui-disabled": {
-                backgroundColor: "#3A3A3A",
-                color: "rgba(255,255,255,0.45)",
-              },
-            }}
-          >
-            <span className="ap-flex ap-items-center ap-justify-center ap-gap-2">
-              {loading && (
-                <CircularProgress size={18} sx={{ color: "#FFC62D" }} />
-              )}
-              {!loading && <span>Completar inscripción</span>}
-            </span>
-          </Button>
-          {!isFormValid && (
-            <span className="ap-text-xs ap-text-gray-400 ap-mt-2">
-              Complete todos los campos obligatorios y acepte el envío por
-              WhatsApp
-            </span>
-          )}
-        </aside>
-      )}
-
-      {/* STICKY MOBILE SUMMARY */}
-      {display.smAndDown && (
-        <div className="ap-fixed ap-bottom-0 ap-left-0 ap-right-0 ap-bg-[#1A1A1A] ap-z-[100000] ap-border-t ap-border-[#3F3F3F] ap-p-4 ap-px-6">
-          <div className="ap-flex ap-flex-col ap-gap-2 ap-mb-3">
-            <div className="ap-flex ap-justify-between ap-items-center">
-              <span className="ap-text-white ap-w-8/12 ap-text-sm ap-font-medium ap-whitespace-nowrap ap-overflow-hidden ap-text-ellipsis">
-                {course.titulo}
-              </span>
-              <span className="ap-text-[#FFC62D] ap-font-semibold">
-                {numberFormatGuaranies(total)}
-              </span>
-            </div>
-
-            <div className="ap-text-xs ap-text-gray-400 ap-flex ap-justify-between">
-              <span>Curso: {numberFormatGuaranies(coursePrice)}</span>
-              <span>Matrícula: {numberFormatGuaranies(matricula)}</span>
-            </div>
-          </div>
-
-          <label className="ap-flex ap-items-center ap-gap-2 ap-mb-2">
-            <Checkbox
-              checked={acceptWhatsapp}
-              onChange={(e) => setAcceptWhatsapp(e.target.checked)}
-              sx={{ color: "white" }}
-            />
-
-            <span className="ap-text-xs ap-text-white">
-              Acepto recibir notificaciones por WhatsApp
-            </span>
-          </label>
-
-          <Button
-            fullWidth
-            disabled={!isFormValid || loading}
-            variant="contained"
-            type="button"
-            onClick={onSubmit}
-            sx={{
-              backgroundColor: isFormValid ? "#FFC62D" : "#3A3A3A",
-              color: isFormValid ? "#000" : "rgba(255,255,255,0.45)",
-              border: isFormValid ? "1px solid #FDD877" : "1px solid #4A4A4A",
-              boxShadow: "none",
-              textTransform: "none",
-              fontFamily: "Poppins",
-              fontSize: "14px",
-              borderRadius: "10px",
-              padding: "10px",
-              cursor: isFormValid ? "pointer" : "not-allowed",
-              transition: "all .2s ease",
-              "&:hover": {
-                backgroundColor: isFormValid ? "#FFD24A" : "#3A3A3A",
-                boxShadow: "none",
-              },
-              "&.Mui-disabled": {
-                backgroundColor: "#3A3A3A",
-                color: "rgba(255,255,255,0.45)",
-              },
-            }}
-          >
-            <span className="ap-flex ap-items-center ap-justify-center ap-gap-2">
-              {loading && (
-                <CircularProgress size={18} sx={{ color: "#FFC62D" }} />
-              )}
-              {!loading && <span>Completar inscripción</span>}
-            </span>
-          </Button>
-        </div>
-      )}
-    </div>
+      <ToastContainer />
+    </>
   );
 };
 
