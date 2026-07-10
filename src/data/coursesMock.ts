@@ -694,7 +694,7 @@ export const courses: Course[] = [
     slug: "programacion-desde-cero",
     backendCourseId: 3,
 
-    consultWhatsappPhone: "0974135398",
+    consultWhatsappPhone: "0976329473",
     consultWhatsappMessage:
       "Hola, me inscribí al curso de Programación desde Cero y quiero coordinar los siguientes pasos.",
 

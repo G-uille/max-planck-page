@@ -42,7 +42,7 @@ const CheckoutSuccess = ({
 
   const defaultDirectionPhone = "595993581578";
   const stackParaguayPhone =
-    normalizePhone(courseWhatsappPhone) || "595974135398";
+    normalizePhone(courseWhatsappPhone) || "595976329473";
 
   const phoneDirection = isProgrammingCourse
     ? stackParaguayPhone
