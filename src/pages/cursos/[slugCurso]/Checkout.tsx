@@ -193,7 +193,14 @@ const CheckoutPage = () => {
   }
 
   if (success) {
-    return <CheckoutSuccess inscriptionId={inscriptionId} />;
+    return (
+      <CheckoutSuccess
+        inscriptionId={inscriptionId}
+        courseSlug={course.slug}
+        courseTitle={item.title}
+        courseWhatsappPhone={(course as any).consultWhatsappPhone}
+      />
+    );
   }
 
   return (

@@ -1,113 +1,178 @@
 import * as React from "react";
 import { Button } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import WhatsAppIcon from "@mui/icons-material/WhatsApp";
+import HomeIcon from "@mui/icons-material/Home";
 import useDisplay from "../../hooks/use-display";
 import { useNavigate } from "react-router-dom";
 
 type Props = {
   inscriptionId?: number | null;
+  courseSlug?: string;
+  courseTitle?: string;
+  courseWhatsappPhone?: string;
 };
 
-const CheckoutSuccess = ({ inscriptionId }: Props) => {
+const normalizePhone = (raw?: string) => {
+  if (!raw) return "";
+
+  const clean = raw.replace(/\D/g, "");
+
+  if (clean.startsWith("595")) return clean;
+
+  if (clean.startsWith("0")) {
+    return `595${clean.slice(1)}`;
+  }
+
+  return clean;
+};
+
+const CheckoutSuccess = ({
+  inscriptionId,
+  courseSlug,
+  courseTitle,
+  courseWhatsappPhone,
+}: Props) => {
   const display = useDisplay();
   const navigate = useNavigate();
 
   const INS = inscriptionId ? `INS-${inscriptionId}` : "INS-____";
-  const phoneDirection = "595993581578"; // ✅ tu número real (sin +)
-  const message = `Buenas, tengo la inscripción número ${INS} y quiero realizar el pago de la inscripción.`;
+
+  const isProgrammingCourse = courseSlug === "programacion-desde-cero";
+
+  const defaultDirectionPhone = "595993581578";
+  const stackParaguayPhone =
+    normalizePhone(courseWhatsappPhone) || "595974135398";
+
+  const phoneDirection = isProgrammingCourse
+    ? stackParaguayPhone
+    : defaultDirectionPhone;
+
+  const contactName = isProgrammingCourse ? "Stack Paraguay" : "Dirección";
+
+  const message = isProgrammingCourse
+    ? `Hola, tengo la inscripción ${INS} al curso de ${courseTitle || "Programación desde Cero"} y quiero coordinar los siguientes pasos.`
+    : `Hola, tengo la inscripción ${INS} y quiero coordinar los siguientes pasos.`;
+
   const waLink = `https://wa.me/${phoneDirection}?text=${encodeURIComponent(
     message,
   )}`;
 
   return (
     <div
-      className={`ap-bg-[#111111] ap-flex ap-items-center ap-justify-center ${
-        display.smAndDown ? "ap-px-4 ap-py-16" : "ap-py-24"
+      className={`ap-bg-[#F3EEDC] ap-min-h-screen ap-flex ap-items-center ap-justify-center ${
+        display.smAndDown ? "ap-px-4 ap-py-12" : "ap-px-6 ap-py-20"
       }`}
     >
-      <div className="ap-bg-[#282828] ap-bg-opacity-55 ap-border ap-border-[#3F3F3F] ap-rounded-2xl ap-p-8 ap-max-w-md ap-w-full ap-text-center ap-flex ap-flex-col ap-gap-6">
-        {/* ICON */}
-        <div className="ap-flex ap-justify-center">
-          <div className="ap-bg-[#FFC62D] ap-bg-opacity-20 ap-rounded-full ap-p-4">
-            <CheckCircleIcon sx={{ fontSize: 48, color: "#FFC62D" }} />
+      <div className="ap-bg-[#FFFDF7] ap-border ap-border-[#DDD3B8] ap-rounded-3xl ap-max-w-[520px] ap-w-full ap-overflow-hidden ap-shadow-[0_24px_70px_rgba(70,55,20,0.14)]">
+        <div className="ap-bg-[#111111] ap-px-8 ap-py-7 ap-text-center">
+          <div className="ap-flex ap-justify-center">
+            <div className="ap-bg-[#FFC730] ap-bg-opacity-20 ap-rounded-full ap-p-4 ap-border ap-border-[#FFC730]/30">
+              <CheckCircleIcon sx={{ fontSize: 54, color: "#FFC730" }} />
+            </div>
           </div>
+
+          <h1 className="ap-text-white ap-text-2xl ap-font-extrabold ap-mt-5">
+            ¡Inscripción registrada!
+          </h1>
+
+          <p className="ap-text-gray-300 ap-text-sm ap-leading-6 ap-mt-2">
+            Tu solicitud fue recibida correctamente.
+          </p>
         </div>
 
-        {/* TITLE */}
-        <h1 className="ap-text-white ap-text-xl ap-font-semibold">
-          ¡Inscripción registrada!
-        </h1>
-
-        {/* INS CODE */}
-        <div className="ap-flex ap-justify-center">
-          <div className="ap-inline-flex ap-items-center ap-gap-2 ap-border ap-border-[#FFC62D] ap-border-opacity-30 ap-bg-[#FFC62D] ap-bg-opacity-10 ap-text-[#FFC62D] ap-text-sm ap-rounded-full ap-px-4 ap-py-2">
-            <span className="ap-text-gray-300">Nro:</span>
-            <b className="ap-text-white">{INS}</b>
+        <div className="ap-p-7 ap-flex ap-flex-col ap-gap-5 ap-text-center">
+          <div className="ap-flex ap-justify-center">
+            <div className="ap-inline-flex ap-items-center ap-gap-2 ap-border ap-border-[#FFC730] ap-bg-[#FFF1B8] ap-text-[#8A6A00] ap-text-sm ap-rounded-full ap-px-5 ap-py-2">
+              <span>Nro:</span>
+              <b className="ap-text-[#111111]">{INS}</b>
+            </div>
           </div>
-        </div>
 
-        {/* MESSAGE */}
-        <p className="ap-text-gray-400 ap-text-sm ap-leading-6">
-          Recibirás una notificación vía{" "}
-          <span className="ap-text-white ap-font-medium">WhatsApp</span> con los
-          detalles para realizar el pago.
-        </p>
+          {courseTitle && (
+            <div className="ap-bg-[#F4EEDC] ap-border ap-border-[#DED4BB] ap-rounded-2xl ap-p-4">
+              <p className="ap-text-xs ap-text-[#8A6A00] ap-font-extrabold ap-uppercase ap-tracking-[0.16em]">
+                Curso
+              </p>
 
-        <div className="ap-bg-[#FFC62D] ap-bg-opacity-20 ap-text-[#FFC62D] ap-text-sm ap-rounded-lg ap-p-4 ap-leading-6">
-          Si en <b>40 segundos</b> no te llega el mensaje, contactate con
-          Dirección al <b className="ap-text-white">(+595) 993 581 578</b>.
-        </div>
+              <p className="ap-text-[#111111] ap-text-base ap-font-extrabold ap-mt-1">
+                {courseTitle}
+              </p>
+            </div>
+          )}
 
-        {/* ACTIONS */}
-        <div className="ap-flex ap-flex-col ap-gap-3">
-          <Button
-            fullWidth
-            variant="contained"
-            onClick={() => navigate("/")}
-            sx={{
-              backgroundColor: "#FFC62D",
-              color: "#000",
-              border: "1px solid #FDD877",
-              boxShadow: "none",
-              textTransform: "none",
-              fontFamily: "Poppins",
-              fontSize: "14px",
-              borderRadius: "10px",
-              padding: "10px",
-              "&:hover": {
-                backgroundColor: "#FFD24A",
+          <p className="ap-text-[#3C362B] ap-text-sm ap-leading-7">
+            Nos pondremos en contacto contigo por{" "}
+            <b className="ap-text-[#111111]">WhatsApp</b> para coordinar los
+            siguientes pasos de la inscripción y el pago.
+          </p>
+
+          <div className="ap-bg-[#FFF8D6] ap-border ap-border-[#FFE27A] ap-rounded-2xl ap-p-4">
+            <p className="ap-text-[#8A6A00] ap-text-sm ap-font-extrabold">
+              ¿Querés escribirnos ahora?
+            </p>
+
+            <p className="ap-text-[#3C362B] ap-text-xs ap-leading-5 ap-mt-1">
+              Podés contactar directamente a {contactName} por WhatsApp con tu
+              número de inscripción.
+            </p>
+          </div>
+
+          <div className="ap-flex ap-flex-col ap-gap-3 ap-mt-1">
+            <Button
+              fullWidth
+              variant="contained"
+              startIcon={<HomeIcon />}
+              onClick={() => navigate("/")}
+              sx={{
+                backgroundColor: "#FFC730",
+                color: "#111111",
+                border: "1px solid #F3BE00",
                 boxShadow: "none",
-              },
-            }}
-          >
-            Volver al inicio
-          </Button>
+                textTransform: "none",
+                fontFamily: "Poppins",
+                fontSize: "14px",
+                borderRadius: "999px",
+                padding: "12px",
+                fontWeight: 800,
+                "&:hover": {
+                  backgroundColor: "#FFD24A",
+                  boxShadow: "none",
+                },
+              }}
+            >
+              Volver al inicio
+            </Button>
 
-          <Button
-            fullWidth
-            variant="outlined"
-            onClick={() => window.open(waLink, "_blank")}
-            sx={{
-              borderColor: "#3F3F3F",
-              color: "white",
-              textTransform: "none",
-              fontFamily: "Poppins",
-              fontSize: "14px",
-              borderRadius: "10px",
-              padding: "10px",
-              "&:hover": {
-                borderColor: "#FFC62D",
-                backgroundColor: "rgba(255,198,45,0.08)",
-              },
-            }}
-          >
-            Contactar Dirección por WhatsApp
-          </Button>
+            <Button
+              fullWidth
+              variant="outlined"
+              startIcon={<WhatsAppIcon />}
+              onClick={() => window.open(waLink, "_blank")}
+              sx={{
+                borderColor: "#DED4BB",
+                color: "#111111",
+                backgroundColor: "#FFFDF7",
+                textTransform: "none",
+                fontFamily: "Poppins",
+                fontSize: "14px",
+                borderRadius: "999px",
+                padding: "12px",
+                fontWeight: 800,
+                "&:hover": {
+                  borderColor: "#FFC730",
+                  backgroundColor: "#FFF1B8",
+                },
+              }}
+            >
+              Contactar a {contactName} por WhatsApp
+            </Button>
 
-          <span className="ap-text-xs ap-text-gray-500">
-            El mensaje se abrirá con tu número de inscripción para agilizar la
-            atención.
-          </span>
+            <span className="ap-text-xs ap-text-[#6D6658] ap-leading-5">
+              El mensaje se abrirá con tu número de inscripción para agilizar la
+              atención.
+            </span>
+          </div>
         </div>
       </div>
     </div>
