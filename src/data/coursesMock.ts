@@ -692,7 +692,7 @@ export const courses: Course[] = [
   // },
   {
     slug: "programacion-desde-cero",
-    backendCourseId: 2,
+    backendCourseId: 3,
 
     titulo: "Programación desde Cero",
     title: "Programación desde Cero",
