@@ -81,9 +81,7 @@ const normalizeModality = (value: any): string => {
 
     if (value.virtual) {
       parts.push(
-        typeof value.virtual === "string"
-          ? value.virtual
-          : "Clases virtuales",
+        typeof value.virtual === "string" ? value.virtual : "Clases virtuales",
       );
     }
 
@@ -135,10 +133,9 @@ export const getCourseView = (course: any) => {
     "Estudiantes y postulantes",
   );
 
-  const category = toText(
-    course.categoria ?? course.category,
-    "Programa 2026",
-  );
+  const owner = toText(course.owner ?? "Max Planck");
+
+  const category = toText(course.categoria ?? course.category, "Programa 2026");
 
   const title = toText(course.titulo ?? course.title ?? course.nombre, "Curso");
 
@@ -160,6 +157,7 @@ export const getCourseView = (course: any) => {
     duration: finalDuration,
     modality,
     audience,
+    owner,
     price,
     oldPrice,
     tags: normalizeTags(course.tags, fallbackTags),
@@ -220,8 +218,14 @@ export const getCourseDates = (course: any) => {
       }
 
       return {
-        date: toText(item.fecha ?? item.date ?? item.label, "Fecha a confirmar"),
-        time: toText(item.hora ?? item.time ?? item.horario, "Horario a confirmar"),
+        date: toText(
+          item.fecha ?? item.date ?? item.label,
+          "Fecha a confirmar",
+        ),
+        time: toText(
+          item.hora ?? item.time ?? item.horario,
+          "Horario a confirmar",
+        ),
         spots: toText(item.cupos ?? item.spots ?? item.lugares, ""),
       };
     });
@@ -302,9 +306,7 @@ export const getCourseWhatsappUrl = (course: any): string => {
   const item = getCourseView(course);
 
   const phone = normalizeWhatsappPhone(
-    course?.consultWhatsappPhone ??
-      course?.whatsappPhone ??
-      "595974135398",
+    course?.consultWhatsappPhone ?? course?.whatsappPhone ?? "595976329473",
   );
 
   const message =

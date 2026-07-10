@@ -31,28 +31,69 @@ export const CourseDetailPage = () => {
   if (!course) {
     return (
       <div className="ap-bg-[#F3EEDC] ap-min-h-screen ap-flex ap-items-center ap-justify-center">
-        <p className="ap-text-[#111111] ap-font-semibold">Curso no encontrado</p>
+        <p className="ap-text-[#111111] ap-font-semibold">
+          Curso no encontrado
+        </p>
       </div>
     );
   }
 
   const item = getCourseView(course);
   const benefits = getCourseBenefits(course);
-  const modules = getCourseModules(course);
+  const modules = React.useMemo(() => {
+    const rawModules = Array.isArray((course as any).modules)
+      ? (course as any).modules
+      : Array.isArray((course as any).programa)
+        ? (course as any).programa
+        : getCourseModules(course);
+
+    return rawModules.map((module: any, index: number) => {
+      if (typeof module === "string") {
+        return {
+          title: module,
+          duration: "",
+          description: "",
+          lessons: [],
+          classCount: 0,
+        };
+      }
+
+      return {
+        ...module,
+        title: module.title ?? module.titulo ?? `Módulo ${index + 1}`,
+        duration: module.duration ?? module.duracion ?? "",
+        description: module.description ?? module.descripcion ?? "",
+        lessons:
+          module.lessons ??
+          module.topics ??
+          module.clases ??
+          module.temas ??
+          [],
+        classCount:
+          module.classCount ??
+          module.classes ??
+          module.lectures ??
+          module.clasesCantidad ??
+          0,
+      };
+    });
+  }, [course]);
   const dates = getCourseDates(course);
   const faqs = getCourseFaqs(course);
 
   return (
-    <SectionFadeIn
-  className={`ap-bg-[#F3EEDC] ap-min-h-screen ap-flex ap-flex-col ap-pb-0 ${
-    display.mdAndDown ? "ap-px-0 ap-pt-18" : "ap-gap-2 ap-pt-3"
-  }`}
->
-      <div className={display.mdAndDown ? "ap-px-4" : "ap-px-[8vw] ap-pt-3"}>
-        <section className="ap-bg-[#F3EEDC] ap-min-h-screen ap-rounded-[28px] ap-border ap-border-[#DDD3B8] ap-overflow-visible">
-          <div className="ap-bg-[radial-gradient(circle_at_top_left,#FFF0AE_0%,#F6F0DD_34%,#EFE8D4_100%)] ap-px-5 md:ap-px-12 lg:ap-px-16 ap-pt-10 ap-pb-12">
+    <SectionFadeIn className="ap-bg-[#F3EEDC] ap-min-h-screen ap-flex ap-flex-col ap-pb-0">
+      <section className="ap-bg-[#111111] ap-text-white">
+        <div
+          className={`ap-max-w-[1240px] ap-mx-auto ap-grid ap-gap-10 ${
+            display.mdAndDown
+              ? "ap-grid-cols-1 ap-px-5 ap-pt-8 ap-pb-10"
+              : "ap-grid-cols-[minmax(0,1fr)_370px] ap-px-8 ap-pt-12 ap-pb-12"
+          }`}
+        >
+          <div className="ap-min-w-0">
             <CoursesBreadcrumbs
-              isDarkMode={false}
+              isDarkMode={true}
               items={[
                 { label: "Inicio", to: "/" },
                 { label: "Cursos", to: "/cursos" },
@@ -60,258 +101,280 @@ export const CourseDetailPage = () => {
               ]}
             />
 
-            <div className="ap-grid lg:ap-grid-cols-[minmax(0,1fr)_390px] ap-gap-8 ap-mt-10 ap-items-start">
-              <main className="ap-flex ap-flex-col ap-gap-8 ap-min-w-0">
-                <div>
-                  <span className="ap-inline-flex ap-bg-[#FFC730] ap-text-[#111111] ap-text-xs ap-font-extrabold ap-rounded-full ap-px-4 ap-py-2">
-                    {item.category}
-                  </span>
+            <div className="ap-mt-8">
+              <p className="ap-text-[#FFC730] ap-text-sm ap-font-extrabold ap-mb-4">
+                {item.category}
+              </p>
 
-                  <h1 className="ap-text-[#090909] ap-font-extrabold ap-text-4xl md:ap-text-6xl ap-leading-tight ap-mt-5 ap-max-w-4xl">
-                    {item.title}
-                  </h1>
+              <h1 className="ap-text-white ap-font-extrabold ap-leading-tight ap-text-3xl md:ap-text-5xl ap-max-w-4xl">
+                {item.title}
+              </h1>
 
-                  <p className="ap-text-[#403B2E] ap-text-base md:ap-text-lg ap-leading-8 ap-mt-6 ap-max-w-3xl">
-                    {item.description}
-                  </p>
-                </div>
+              <p className="ap-text-gray-200 ap-text-base md:ap-text-xl ap-leading-8 ap-mt-5 ap-max-w-3xl">
+                {item.description}
+              </p>
 
-                <div className="ap-grid sm:ap-grid-cols-3 ap-gap-4">
-                  <InfoPill label="Duración" value={item.duration} />
-                  <InfoPill label="Modalidad" value={item.modality} />
-                  <InfoPill label="Dirigido a" value={item.audience} />
-                </div>
+              <div className="ap-flex ap-flex-wrap ap-gap-3 ap-mt-6">
+                {(course.highlights ?? [])
+                  .slice(0, 5)
+                  .map((highlight: string) => (
+                    <span
+                      key={highlight}
+                      className="ap-inline-flex ap-items-center ap-gap-2 ap-bg-[#1A1A1A] ap-border ap-border-[#333333] ap-rounded-full ap-px-4 ap-py-2 ap-text-sm ap-font-semibold ap-text-gray-100"
+                    >
+                      <span className="ap-w-2 ap-h-2 ap-bg-[#FFC730] ap-rounded-full" />
+                      {highlight}
+                    </span>
+                  ))}
+              </div>
 
-                <SectionBlock
-                  eyebrow="Para quién es"
-                  title="Un programa pensado para avanzar con orden y acompañamiento"
-                >
-                  <div className="ap-grid md:ap-grid-cols-2 ap-gap-4">
-                    {benefits.map((benefit, index) => (
-                      <FeatureCard
-                        key={benefit}
-                        number={String(index + 1).padStart(2, "0")}
-                        text={benefit}
-                      />
-                    ))}
-                  </div>
-                </SectionBlock>
-
-                <SectionBlock eyebrow="Programa" title="Contenido del curso">
-                  <div className="ap-bg-[#FFFDF7] ap-border ap-border-[#DDD3B8] ap-rounded-3xl ap-p-5 md:ap-p-6 ap-shadow-[0_18px_45px_rgba(70,55,20,0.08)]">
-                    <div className="ap-flex ap-flex-col ap-gap-3">
-                      {modules.map((module, index) => (
-                        <div
-                          key={`${module}-${index}`}
-                          className="ap-flex ap-gap-4 ap-items-start ap-border-b ap-border-[#E7DEC8] last:ap-border-b-0 ap-pb-3 last:ap-pb-0"
-                        >
-                          <span className="ap-flex ap-items-center ap-justify-center ap-min-w-8 ap-h-8 ap-rounded-full ap-bg-[#FFC730] ap-text-[#111111] ap-text-xs ap-font-extrabold">
-                            {index + 1}
-                          </span>
-
-                          <p className="ap-text-[#322D23] ap-text-sm md:ap-text-base ap-leading-7 ap-font-medium">
-                            {module}
-                          </p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </SectionBlock>
-
-                <SectionBlock eyebrow="Fechas" title="Próximas fechas">
-                  <div className="ap-flex ap-flex-col ap-gap-4">
-                    {dates.map((date: any, index: number) => (
-                      <DateCard key={`${date.date}-${index}`} date={date} />
-                    ))}
-                  </div>
-                </SectionBlock>
-
-                <SectionBlock
-                  eyebrow="Preguntas frecuentes"
-                  title="Información importante"
-                >
-                  <div className="ap-flex ap-flex-col ap-gap-3">
-                    {faqs.map((faq: any, index: number) => (
-                      <FaqItem key={`${faq.question}-${index}`} faq={faq} />
-                    ))}
-                  </div>
-                </SectionBlock>
-              </main>
-
-              {!display.mdAndDown && <EnrollmentAside course={course} />}
+              {/* <div className="ap-flex ap-flex-wrap ap-gap-x-6 ap-gap-y-2 ap-mt-7 ap-text-sm ap-text-gray-300">
+                <span>Actualizado para 2026</span>
+                <span>Español</span>
+                <span>{item.modality}</span>
+              </div> */}
             </div>
           </div>
+        </div>
+      </section>
 
-          {display.mdAndDown && <MobileEnrollmentBar course={course} />}
-        </section>
+      <section className="ap-bg-[#F3EEDC]">
+        <div
+          className={`ap-max-w-[1240px] ap-mx-auto ap-grid ap-gap-10 ${
+            display.mdAndDown
+              ? "ap-grid-cols-1 ap-px-5 ap-py-8"
+              : "ap-grid-cols-[minmax(0,1fr)_370px] ap-px-8 ap-py-10"
+          }`}
+        >
+          <main className="ap-flex ap-flex-col ap-gap-9 ap-min-w-0">
+            {/* {display.mdAndDown && <EnrollmentAside course={course} />} */}
 
-        <div className="ap-py-20" />
-      </div>
+            <CourseSummaryStrip course={course} item={item} modules={modules} />
+
+            <WhatYouWillLearn items={course.aprenderas ?? benefits} />
+
+            <RelatedTopics tags={item.tags ?? course.tags ?? []} />
+
+            <CourseIncludes items={course.incluye ?? []} />
+
+            <CourseContent course={course} modules={modules} />
+
+            <Requirements items={course.requisitos ?? []} />
+
+            <CourseDescription
+              text={course.descripcionLarga ?? item.description}
+            />
+
+            <CourseDates dates={dates} />
+
+            <FaqSection faqs={faqs} />
+          </main>
+
+          {!display.mdAndDown && (
+            <div className="ap-hidden lg:ap-block" style={{ marginTop: -380 }}>
+              <EnrollmentAside course={course} />
+            </div>
+          )}
+        </div>
+      </section>
+
+      {display.mdAndDown && <MobileEnrollmentBar course={course} />}
     </SectionFadeIn>
   );
 };
 
-const InfoPill = ({ label, value }: { label: string; value: string }) => (
-  <div className="ap-bg-[#FFFDF7] ap-border ap-border-[#DDD3B8] ap-rounded-3xl ap-p-5 ap-shadow-[0_14px_35px_rgba(70,55,20,0.08)]">
-    <p className="ap-text-[#8A6A00] ap-text-xs ap-font-extrabold ap-uppercase ap-tracking-[0.18em]">
-      {label}
-    </p>
-    <p className="ap-text-[#111111] ap-text-sm ap-font-extrabold ap-mt-2 ap-leading-5">
-      {value}
-    </p>
-  </div>
-);
+const getModuleLessons = (module: any) => {
+  const lessons =
+    module.lessons ?? module.topics ?? module.clases ?? module.temas ?? [];
 
-const SectionBlock = ({
-  eyebrow,
-  title,
-  children,
+  return Array.isArray(lessons) ? lessons : [];
+};
+
+const getModuleClassCount = (module: any) => {
+  const lessons = getModuleLessons(module);
+
+  if (lessons.length > 0) {
+    return lessons.length;
+  }
+
+  return Number(
+    module.classCount ??
+      module.classes ??
+      module.lectures ??
+      module.clasesCantidad ??
+      0,
+  );
+};
+
+const getTotalClassCount = (course: any, modules: any[]) => {
+  const explicitTotal = Number(
+    course.totalClasses ?? course.totalClases ?? course.clasesTotales ?? 0,
+  );
+
+  if (explicitTotal > 0) {
+    return explicitTotal;
+  }
+
+  return modules.reduce((acc, module) => {
+    return acc + getModuleClassCount(module);
+  }, 0);
+};
+
+const CourseSummaryStrip = ({
+  course,
+  item,
+  modules,
 }: {
-  eyebrow: string;
-  title: string;
-  children: React.ReactNode;
-}) => (
-  <section>
-    <p className="ap-text-[#8A6A00] ap-text-xs ap-font-extrabold ap-uppercase ap-tracking-[0.24em]">
-      {eyebrow}
-    </p>
+  course: any;
+  item: any;
+  modules: any[];
+}) => {
+  const totalLessons = getTotalClassCount(course, modules);
+  const moduleLabel = course.moduleLabel ?? "módulos";
 
-    <h2 className="ap-text-[#111111] ap-text-2xl md:ap-text-3xl ap-font-extrabold ap-leading-tight ap-mt-2 ap-mb-5">
-      {title}
-    </h2>
+  return (
+    <div className="ap-bg-[#FFFDF7] ap-border ap-border-[#DDD3B8] ap-rounded-2xl ap-overflow-hidden ap-shadow-[0_16px_45px_rgba(70,55,20,0.08)]">
+      <div className="ap-grid md:ap-grid-cols-[150px_1fr_160px_160px]">
+        <div className="ap-bg-[#FFC730] ap-flex ap-items-center ap-justify-center ap-p-5">
+          <p className="ap-text-[#111111] ap-font-extrabold ap-text-center">
+            {course.summaryLabel ?? "Ruta inicial"}
+          </p>
+        </div>
 
-    {children}
-  </section>
-);
+        <div className="ap-p-5 ap-border-b md:ap-border-b-0 md:ap-border-r ap-border-[#E7DEC8]">
+          <p className="ap-text-[#111111] ap-font-bold">
+            {course.summaryTitle ??
+              "Fundamentos de programación + desarrollo web inicial"}
+          </p>
 
-const FeatureCard = ({ number, text }: { number: string; text: string }) => (
-  <div className="ap-bg-[#FFFDF7] ap-border ap-border-[#DDD3B8] ap-rounded-3xl ap-p-6 ap-shadow-[0_16px_40px_rgba(70,55,20,0.08)]">
-    <span className="ap-text-[#FFC730] ap-text-sm ap-font-extrabold">
-      {number}
-    </span>
+          <p className="ap-text-[#5D574A] ap-text-sm ap-mt-1">
+            {course.summaryDescription ??
+              "Una ruta pensada para empezar desde cero y avanzar paso a paso."}
+          </p>
+        </div>
 
-    <p className="ap-text-[#181818] ap-text-base ap-font-bold ap-leading-7 ap-mt-4">
-      {text}
-    </p>
-  </div>
-);
+        <div className="ap-p-5 ap-border-b md:ap-border-b-0 md:ap-border-r ap-border-[#E7DEC8]">
+          <p className="ap-text-2xl ap-font-extrabold ap-text-[#111111]">
+            {modules.length}
+          </p>
+          <p className="ap-text-sm ap-text-[#5D574A]">{moduleLabel}</p>
+        </div>
 
-const DateCard = ({ date }: { date: any }) => (
-  <div className="ap-bg-[#FFFDF7] ap-border ap-border-[#DDD3B8] ap-rounded-3xl ap-p-5 ap-flex ap-flex-col md:ap-flex-row md:ap-items-center md:ap-justify-between ap-gap-4 ap-shadow-[0_16px_40px_rgba(70,55,20,0.08)]">
-    <div>
-      <p className="ap-text-[#111111] ap-font-extrabold ap-text-lg">
-        {date.date}
-      </p>
-
-      <p className="ap-text-[#5D574A] ap-font-medium ap-text-sm ap-mt-1">
-        {date.time}
-      </p>
-
-      {date.spots && (
-        <p className="ap-text-[#8A6A00] ap-font-bold ap-text-xs ap-mt-2">
-          {date.spots}
-        </p>
-      )}
+        <div className="ap-p-5">
+          <p className="ap-text-2xl ap-font-extrabold ap-text-[#111111]">
+            {totalLessons}
+          </p>
+          <p className="ap-text-sm ap-text-[#5D574A]">clases aprox.</p>
+        </div>
+      </div>
     </div>
-
-    <Link
-      to="#"
-      className="ap-inline-flex ap-items-center ap-justify-center ap-bg-[#FFC730] hover:ap-bg-[#FFD95C] ap-text-[#111111] ap-font-extrabold ap-rounded-full ap-px-6 ap-py-3 ap-text-sm ap-transition"
-    >
-      Consultar cupo
-    </Link>
-  </div>
-);
-
-const FaqItem = ({ faq }: { faq: any }) => (
-  <details className="ap-bg-[#FFFDF7] ap-border ap-border-[#DDD3B8] ap-rounded-2xl ap-p-5 ap-group">
-    <summary className="ap-cursor-pointer ap-list-none ap-flex ap-items-center ap-justify-between ap-gap-4">
-      <span className="ap-text-[#111111] ap-font-bold">{faq.question}</span>
-      <span className="ap-text-[#8A6A00] ap-font-extrabold group-open:ap-rotate-180 ap-transition">
-        ↓
-      </span>
-    </summary>
-
-    <p className="ap-text-[#5D574A] ap-text-sm ap-leading-6 ap-mt-4">
-      {faq.answer}
-    </p>
-  </details>
-);
+  );
+};
 
 const EnrollmentAside = ({ course }: { course: any }) => {
   const item = getCourseView(course);
+  const whatsappUrl = getCourseWhatsappUrl(course) || WHATSAPP_URL;
 
   return (
-    <aside className="ap-sticky ap-top-[125px] ap-self-start ap-z-10 ap-max-h-[calc(100vh-145px)] ap-overflow-y-auto ap-bg-[#FFFDF7] ap-text-[#111111] ap-rounded-3xl ap-border ap-border-[#DDD3B8] ap-p-6 ap-shadow-[0_24px_70px_rgba(70,55,20,0.16)]">
-      <div className="ap-flex ap-items-center ap-justify-between ap-gap-3">
-        <span className="ap-bg-[#FFF1B8] ap-text-[#8A6A00] ap-border ap-border-[#FFE27A] ap-text-xs ap-font-extrabold ap-rounded-full ap-px-3 ap-py-1">
-          Inscripción 2026
-        </span>
-
-        <span className="ap-text-xs ap-font-bold ap-text-[#7C745F]">
-          Cupos limitados
-        </span>
-      </div>
-
-      <h3 className="ap-text-3xl ap-font-extrabold ap-mt-5">
-        {formatGs(item.price)}
-        {item.price > 0 && (
-          <span className="ap-text-sm ap-font-extrabold ap-text-[#8A6A00]">
-            {" "}
-            / mes
-          </span>
+    <aside className="ap-bg-[#FFFDF7] ap-text-[#111111] ap-border ap-border-[#DDD3B8] ap-rounded-2xl ap-overflow-hidden ap-shadow-[0_24px_70px_rgba(0,0,0,0.18)] ap-h-fit lg:ap-sticky lg:ap-top-[105px]">
+      <div className="ap-relative ap-h-[165px] ap-bg-[#111111]">
+        {course.fileURL ? (
+          <img
+            src={course.fileURL}
+            alt={item.title}
+            className="ap-w-full ap-h-full ap-object-cover"
+          />
+        ) : (
+          <div className="ap-w-full ap-h-full ap-bg-[radial-gradient(circle_at_top_left,#FFC730_0%,#1B1B1B_42%,#111111_100%)]" />
         )}
-      </h3>
-
-      {item.oldPrice > 0 && (
-        <p className="ap-text-sm ap-text-[#7C745F] ap-mt-1">
-          Antes{" "}
-          <span className="ap-line-through">{formatGs(item.oldPrice)}</span>
-        </p>
-      )}
-
-      <div className="ap-mt-5 ap-bg-[#F4EEDC] ap-rounded-2xl ap-border ap-border-[#DED4BB] ap-p-4 ap-flex ap-flex-col ap-gap-3">
-        <SummaryRow label="Programa" value={item.title} />
-        <SummaryRow label="Duración" value={item.duration} />
-        <SummaryRow label="Modalidad" value={item.modality} />
       </div>
 
-     {isCourseEnrollmentEnabled(course) ? (
-        <Link
-          to={`/checkout/${item.slug}`}
-          className="ap-mt-6 ap-flex ap-items-center ap-justify-center ap-bg-[#FFC730] hover:ap-bg-[#FFD95C] ap-text-[#111111] ap-font-extrabold ap-rounded-full ap-px-5 ap-py-4 ap-transition"
-        >
-          {getEnrollmentButtonLabel(course)}
-        </Link>
-      ) : (
-        <button
-          type="button"
-          disabled
-          className="ap-mt-6 ap-flex ap-items-center ap-justify-center ap-bg-[#DED4BB] ap-text-[#8D8573] ap-font-extrabold ap-rounded-full ap-px-5 ap-py-4 ap-cursor-not-allowed"
-        >
-          {getEnrollmentButtonLabel(course)}
-        </button>
-      )}
+      <div className="ap-p-5">
+        <div className="ap-flex ap-items-center ap-justify-between ap-gap-3">
+          <span className="ap-bg-[#FFF1B8] ap-text-[#8A6A00] ap-border ap-border-[#FFE27A] ap-text-xs ap-font-extrabold ap-rounded-full ap-px-3 ap-py-1">
+            Inscripción 2026
+          </span>
 
-      {!isCourseEnrollmentEnabled(course) && (
-        <p className="ap-text-xs ap-text-[#8A6A00] ap-font-semibold ap-leading-5 ap-mt-3">
-          {getEnrollmentDisabledMessage(course)}
+          <span className="ap-text-xs ap-font-bold ap-text-[#7C745F]">
+            Cupos limitados
+          </span>
+        </div>
+
+        <div className="ap-mt-4">
+          {item.price > 0 ? (
+            <div className="ap-flex ap-items-end ap-gap-2 ap-flex-wrap">
+              <strong className="ap-text-3xl ap-font-extrabold">
+                {formatGs(item.price)}
+              </strong>
+
+              <span className="ap-text-[#8A6A00] ap-font-bold ap-mb-1">
+                / mes
+              </span>
+
+              {item.oldPrice > 0 && (
+                <span className="ap-text-gray-400 ap-line-through ap-mb-1">
+                  {formatGs(item.oldPrice)}
+                </span>
+              )}
+            </div>
+          ) : (
+            <>
+              <p className="ap-text-sm ap-text-[#5D574A] ap-font-medium">
+                Inversión
+              </p>
+
+              <strong className="ap-text-3xl ap-font-extrabold">
+                Consultar
+              </strong>
+            </>
+          )}
+        </div>
+
+        <p className="ap-text-sm ap-text-[#5D574A] ap-mt-2">
+          Matrícula:{" "}
+          <strong className="ap-text-[#111111]">
+            {formatGs(course.matricula ?? 50000)}
+          </strong>
         </p>
-      )}
 
-     <a
-        href={getCourseWhatsappUrl(course)}
-        target="_blank"
-        rel="noreferrer"
-        className="ap-mt-3 ap-flex ap-items-center ap-justify-center ap-bg-[#F4EEDC] hover:ap-bg-[#EFE4C8] ap-text-[#111111] ap-border ap-border-[#DED4BB] ap-font-extrabold ap-rounded-full ap-px-5 ap-py-3 ap-transition"
-      >
-        Consultar por WhatsApp
-      </a>
+        {isCourseEnrollmentEnabled(course) ? (
+          <Link
+            to={`/checkout/${item.slug}`}
+            className="ap-mt-5 ap-flex ap-items-center ap-justify-center ap-bg-[#FFC730] hover:ap-bg-[#FFD95C] ap-text-[#111111] ap-font-extrabold ap-rounded-xl ap-px-5 ap-py-3.5 ap-transition"
+          >
+            {getEnrollmentButtonLabel(course)}
+          </Link>
+        ) : (
+          <button
+            type="button"
+            disabled
+            className="ap-mt-5 ap-flex ap-w-full ap-items-center ap-justify-center ap-bg-[#DED4BB] ap-text-[#8D8573] ap-font-extrabold ap-rounded-xl ap-px-5 ap-py-3.5 ap-cursor-not-allowed"
+          >
+            {getEnrollmentButtonLabel(course)}
+          </button>
+        )}
 
-      <p className="ap-text-xs ap-text-[#6D6658] ap-leading-5 ap-mt-5">
-        La inscripción queda registrada y el equipo académico se comunica para
-        confirmar detalles del curso, horarios y materiales.
-      </p>
+        {!isCourseEnrollmentEnabled(course) && (
+          <p className="ap-text-xs ap-text-[#8A6A00] ap-font-semibold ap-leading-5 ap-mt-3">
+            {getEnrollmentDisabledMessage(course)}
+          </p>
+        )}
+
+        <a
+          href={whatsappUrl}
+          target="_blank"
+          rel="noreferrer"
+          className="ap-mt-3 ap-flex ap-items-center ap-justify-center ap-bg-[#F4EEDC] hover:ap-bg-[#EFE4C8] ap-text-[#111111] ap-border ap-border-[#DED4BB] ap-font-extrabold ap-rounded-xl ap-px-5 ap-py-3 ap-transition"
+        >
+          Consultar por WhatsApp
+        </a>
+
+        <div className="ap-mt-5 ap-bg-[#F4EEDC] ap-rounded-2xl ap-border ap-border-[#DED4BB] ap-p-4 ap-flex ap-flex-col ap-gap-3">
+          <SummaryRow label="Programa" value={item.title} />
+          <SummaryRow label="Duración" value={item.duration} />
+          <SummaryRow label="Modalidad" value={item.modality} />
+        </div>
+      </div>
     </aside>
   );
 };
@@ -325,6 +388,275 @@ const SummaryRow = ({ label, value }: { label: string; value: string }) => (
   </div>
 );
 
+const WhatYouWillLearn = ({ items }: { items: string[] }) => (
+  <section className="ap-bg-[#FFFDF7] ap-border ap-border-[#DDD3B8] ap-rounded-2xl ap-p-6">
+    <h2 className="ap-text-2xl ap-font-extrabold ap-text-[#111111]">
+      Lo que vas a aprender
+    </h2>
+
+    <div className="ap-grid md:ap-grid-cols-2 ap-gap-x-8 ap-gap-y-4 ap-mt-5">
+      {items.map((item) => (
+        <div key={item} className="ap-flex ap-items-start ap-gap-3">
+          <span className="ap-text-[#8A6A00] ap-font-extrabold">✓</span>
+          <p className="ap-text-sm ap-leading-6 ap-text-[#322D23]">{item}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+);
+
+const RelatedTopics = ({ tags }: { tags: string[] }) => (
+  <section>
+    <h2 className="ap-text-2xl ap-font-extrabold ap-text-[#111111]">
+      Temas que vas a trabajar
+    </h2>
+
+    <div className="ap-flex ap-flex-wrap ap-gap-3 ap-mt-4">
+      {tags.map((tag) => (
+        <span
+          key={tag}
+          className="ap-bg-[#FFFDF7] ap-border ap-border-[#DDD3B8] ap-rounded-xl ap-px-5 ap-py-3 ap-text-sm ap-font-extrabold ap-text-[#111111]"
+        >
+          {tag}
+        </span>
+      ))}
+    </div>
+  </section>
+);
+
+const CourseIncludes = ({ items }: { items: string[] }) => (
+  <section>
+    <h2 className="ap-text-2xl ap-font-extrabold ap-text-[#111111]">
+      Este curso incluye
+    </h2>
+
+    <div className="ap-grid md:ap-grid-cols-2 ap-gap-4 ap-mt-5">
+      {items.map((item) => (
+        <div
+          key={item}
+          className="ap-flex ap-items-start ap-gap-3 ap-bg-[#FFFDF7] ap-border ap-border-[#DDD3B8] ap-rounded-2xl ap-p-4"
+        >
+          <span className="ap-text-[#8A6A00] ap-font-extrabold">✓</span>
+          <span className="ap-text-sm ap-leading-6 ap-text-[#322D23]">
+            {item}
+          </span>
+        </div>
+      ))}
+    </div>
+  </section>
+);
+const CourseContent = ({
+  course,
+  modules,
+}: {
+  course: any;
+  modules: any[];
+}) => {
+  const [openIndex, setOpenIndex] = React.useState(0);
+
+  const totalLessons = getTotalClassCount(course, modules);
+  const moduleLabel = course.moduleLabel ?? "módulos";
+
+  return (
+    <section>
+      <div className="ap-flex ap-items-end ap-justify-between ap-gap-4 ap-mb-4">
+        <div>
+          <h2 className="ap-text-2xl ap-font-extrabold ap-text-[#111111]">
+            Contenido del curso
+          </h2>
+
+          <p className="ap-text-sm ap-text-[#5D574A] ap-mt-2">
+            {modules.length} {moduleLabel} · {totalLessons} clases aproximadas
+          </p>
+        </div>
+      </div>
+
+      <div className="ap-border ap-border-[#D8D0BD] ap-rounded-2xl ap-overflow-hidden ap-bg-white">
+        {modules.map((module, index) => {
+          const lessons = getModuleLessons(module);
+          const classCount = getModuleClassCount(module);
+          const isOpen = openIndex === index;
+
+          return (
+            <div
+              key={`${module.title}-${index}`}
+              className="ap-border-b ap-border-[#E7DEC8] last:ap-border-b-0"
+            >
+              <button
+                type="button"
+                onClick={() => setOpenIndex(isOpen ? -1 : index)}
+                className="ap-w-full ap-flex ap-items-center ap-justify-between ap-gap-4 ap-p-5 ap-bg-[#F8F4E8] hover:ap-bg-[#FFF1B8] ap-transition ap-text-left"
+              >
+                <div className="ap-flex ap-items-center ap-gap-3">
+                  <span className="ap-text-lg ap-font-extrabold">
+                    {isOpen ? "⌃" : "⌄"}
+                  </span>
+
+                  <div>
+                    <p className="ap-font-extrabold ap-text-[#111111]">
+                      {module.title}
+                    </p>
+
+                    {module.description && (
+                      <p className="ap-text-xs ap-text-[#6D6658] ap-mt-1 ap-leading-5">
+                        {module.description}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                <span className="ap-text-sm ap-text-[#5D574A] ap-whitespace-nowrap">
+                  {classCount > 0 ? `${classCount} clases` : "Unidad"}
+                  {module.duration ? ` · ${module.duration}` : ""}
+                </span>
+              </button>
+
+              {isOpen && (
+                <div className="ap-bg-white">
+                  {lessons.length > 0 ? (
+                    lessons.map((lesson: string) => (
+                      <div
+                        key={lesson}
+                        className="ap-flex ap-items-center ap-justify-between ap-gap-4 ap-px-6 ap-py-4 ap-border-t ap-border-[#EFE7D5]"
+                      >
+                        <div className="ap-flex ap-items-center ap-gap-3">
+                          <span className="ap-text-[#8A6A00]">▸</span>
+                          <p className="ap-text-sm ap-text-[#322D23]">
+                            {lesson}
+                          </p>
+                        </div>
+
+                        <span className="ap-text-xs ap-text-[#8D8573]">
+                          Clase
+                        </span>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="ap-px-6 ap-py-5 ap-border-t ap-border-[#EFE7D5]">
+                      <p className="ap-text-sm ap-text-[#322D23] ap-leading-7">
+                        {module.description ??
+                          "Contenido desarrollado durante esta unidad."}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </section>
+  );
+};
+
+const Requirements = ({ items }: { items: string[] }) => {
+  if (!items.length) return null;
+
+  return (
+    <section>
+      <h2 className="ap-text-2xl ap-font-extrabold ap-text-[#111111]">
+        Requisitos
+      </h2>
+
+      <ul className="ap-mt-4 ap-flex ap-flex-col ap-gap-2">
+        {items.map((item) => (
+          <li
+            key={item}
+            className="ap-flex ap-items-start ap-gap-3 ap-text-[#322D23]"
+          >
+            <span className="ap-text-[#8A6A00] ap-font-extrabold">•</span>
+            <span className="ap-text-sm ap-leading-6">{item}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+};
+
+const CourseDescription = ({ text }: { text: string }) => (
+  <section>
+    <h2 className="ap-text-2xl ap-font-extrabold ap-text-[#111111]">
+      Descripción
+    </h2>
+
+    <p className="ap-text-[#4E473A] ap-text-sm md:ap-text-base ap-leading-8 ap-mt-4 ap-max-w-3xl">
+      {text}
+    </p>
+  </section>
+);
+
+const CourseDates = ({ dates }: { dates: any[] }) => {
+  if (!dates.length) return null;
+
+  return (
+    <section>
+      <h2 className="ap-text-2xl ap-font-extrabold ap-text-[#111111]">
+        Próximas fechas
+      </h2>
+
+      <div className="ap-flex ap-flex-col ap-gap-4 ap-mt-5">
+        {dates.map((date: any, index: number) => (
+          <div
+            key={`${date.date}-${index}`}
+            className="ap-bg-[#FFFDF7] ap-border ap-border-[#DDD3B8] ap-rounded-2xl ap-p-5 ap-flex ap-flex-col md:ap-flex-row md:ap-items-center md:ap-justify-between ap-gap-4"
+          >
+            <div>
+              <p className="ap-text-[#111111] ap-font-extrabold ap-text-lg">
+                {date.date}
+              </p>
+
+              <p className="ap-text-[#5D574A] ap-font-medium ap-text-sm ap-mt-1">
+                {date.time}
+              </p>
+
+              {date.spots && (
+                <p className="ap-text-[#8A6A00] ap-font-bold ap-text-xs ap-mt-2">
+                  {date.spots}
+                </p>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+};
+
+const FaqSection = ({ faqs }: { faqs: any[] }) => {
+  if (!faqs.length) return null;
+
+  return (
+    <section>
+      <h2 className="ap-text-2xl ap-font-extrabold ap-text-[#111111]">
+        Información importante
+      </h2>
+
+      <div className="ap-flex ap-flex-col ap-gap-3 ap-mt-5">
+        {faqs.map((faq: any, index: number) => (
+          <details
+            key={`${faq.question}-${index}`}
+            className="ap-bg-[#FFFDF7] ap-border ap-border-[#DDD3B8] ap-rounded-2xl ap-p-5 ap-group"
+          >
+            <summary className="ap-cursor-pointer ap-list-none ap-flex ap-items-center ap-justify-between ap-gap-4">
+              <span className="ap-text-[#111111] ap-font-bold">
+                {faq.question}
+              </span>
+
+              <span className="ap-text-[#8A6A00] ap-font-extrabold group-open:ap-rotate-180 ap-transition">
+                ↓
+              </span>
+            </summary>
+
+            <p className="ap-text-[#5D574A] ap-text-sm ap-leading-6 ap-mt-4">
+              {faq.answer}
+            </p>
+          </details>
+        ))}
+      </div>
+    </section>
+  );
+};
+
 const MobileEnrollmentBar = ({ course }: { course: any }) => {
   const item = getCourseView(course);
 
@@ -336,7 +668,7 @@ const MobileEnrollmentBar = ({ course }: { course: any }) => {
         </span>
 
         <span className="ap-text-[#8A6A00] ap-font-extrabold">
-          {formatGs(item.price)}
+          {item.price > 0 ? formatGs(item.price) : "Consultar"}
         </span>
       </div>
 

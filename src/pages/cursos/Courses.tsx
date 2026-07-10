@@ -39,15 +39,15 @@ const CoursesPage: React.FC = () => {
   }, [query, category]);
 
   return (
-   <SectionFadeIn
-  className={`ap-bg-[#F3EEDC] ap-min-h-screen ap-flex ap-flex-col ap-pb-0 ${
-    display.mdAndDown ? "ap-px-0 ap-pt-18" : "ap-gap-2 ap-pt-3"
-  }`}
->
+    <SectionFadeIn
+      className={`ap-bg-[#F3EEDC] ap-min-h-screen ap-flex ap-flex-col ap-pb-0 ${
+        display.mdAndDown ? "ap-px-0 ap-pt-18" : "ap-gap-2 ap-pt-3"
+      }`}
+    >
       <div className={display.mdAndDown ? "ap-px-4" : "ap-px-[8vw] ap-pt-3"}>
         <div className="ap-container ap-flex ap-flex-col ap-gap-5">
-          <section className="ap-bg-[#F3EEDC] ap-min-h-screen ap-rounded-[28px] ap-border ap-border-[#DDD3B8] ap-overflow-hidden">
-            <div className="ap-bg-[radial-gradient(circle_at_top_left,#FFF0AE_0%,#F6F0DD_34%,#EFE8D4_100%)] ap-px-5 md:ap-px-12 lg:ap-px-16 ap-pt-10 ap-pb-10">
+          <section className="ap-bg-[#F3EEDC] ap-rounded-[28px] ap-border ap-border-[#DDD3B8] ap-overflow-hidden">
+            <div className="ap-bg-[radial-gradient(circle_at_top_left,#FFF0AE_0%,#F6F0DD_34%,#EFE8D4_100%)] ap-px-5 md:ap-px-10 lg:ap-px-12 ap-pt-6 ap-pb-6">
               <CoursesBreadcrumbs
                 isDarkMode={false}
                 items={[
@@ -56,51 +56,49 @@ const CoursesPage: React.FC = () => {
                 ]}
               />
 
-              <div className="ap-grid lg:ap-grid-cols-[1fr_360px] ap-gap-8 ap-items-end ap-mt-10">
+              <div className="ap-grid lg:ap-grid-cols-[minmax(0,1fr)_300px] ap-gap-6 ap-items-center ap-mt-5">
                 <div>
-                  <span className="ap-inline-flex ap-items-center ap-rounded-full ap-bg-[#FFC730] ap-text-[#111111] ap-text-xs ap-font-extrabold ap-px-4 ap-py-2 ap-mb-5 ap-shadow-sm">
+                  <span className="ap-inline-flex ap-items-center ap-rounded-full ap-bg-[#FFC730] ap-text-[#111111] ap-text-[11px] ap-font-extrabold ap-px-4 ap-py-2 ap-mb-4 ap-shadow-sm">
                     Programas Max Planck 2026
                   </span>
 
-                  <h1 className="ap-text-[#090909] ap-font-extrabold ap-leading-tight ap-text-3xl md:ap-text-5xl ap-max-w-4xl">
-                    Cursos disponibles para reforzar tu preparación académica
+                  <h1 className="ap-text-[#090909] ap-font-extrabold ap-leading-tight ap-text-3xl md:ap-text-4xl ap-max-w-3xl">
+                    Cursos y programas para avanzar con acompañamiento
                   </h1>
 
-                  <p className="ap-text-[#403B2E] ap-text-sm md:ap-text-base ap-leading-7 ap-mt-5 ap-max-w-2xl">
-                    Elegí el programa que mejor se adapta a tu objetivo:
-                    refuerzo preuniversitario, admisión a colegios técnicos y
-                    acompañamiento académico con clases, práctica y materiales
-                    digitales.
+                  <p className="ap-text-[#403B2E] ap-text-sm md:ap-text-base ap-leading-7 ap-mt-4 ap-max-w-2xl">
+                    Encontrá programas académicos y cursos prácticos con clases
+                    guiadas, materiales digitales, ejercicios y acompañamiento
+                    durante todo el proceso.
                   </p>
                 </div>
 
-                <div className="ap-bg-[#FFFDF7] ap-rounded-3xl ap-p-5 ap-border ap-border-[#E4D8B8] ap-shadow-[0_18px_45px_rgba(70,55,20,0.10)]">
-                  <p className="ap-text-[#111111] ap-text-sm ap-font-bold">
-                    ¿Tenés dudas sobre qué curso elegir?
+                <div className="ap-bg-[#FFFDF7] ap-rounded-2xl ap-p-4 ap-border ap-border-[#E4D8B8] ap-shadow-[0_12px_30px_rgba(70,55,20,0.08)]">
+                  <p className="ap-text-[#111111] ap-text-sm ap-font-extrabold">
+                    ¿No sabés cuál elegir?
                   </p>
 
-                  <p className="ap-text-[#5D574A] ap-text-sm ap-mt-2 ap-leading-6">
-                    Podemos orientarte según el grado, institución objetivo y
-                    disponibilidad horaria.
+                  <p className="ap-text-[#5D574A] ap-text-xs ap-mt-2 ap-leading-5">
+                    Te orientamos según tu objetivo, nivel y disponibilidad.
                   </p>
 
                   <a
                     href={WHATSAPP_URL}
                     target="_blank"
                     rel="noreferrer"
-                    className="ap-mt-4 ap-inline-flex ap-w-full ap-justify-center ap-bg-[#FFC730] ap-text-[#111111] ap-font-extrabold ap-rounded-full ap-px-5 ap-py-3 ap-text-sm hover:ap-bg-[#FFD95C] ap-transition"
+                    className="ap-mt-3 ap-inline-flex ap-w-full ap-justify-center ap-bg-[#FFC730] ap-text-[#111111] ap-font-extrabold ap-rounded-full ap-px-4 ap-py-2.5 ap-text-sm hover:ap-bg-[#FFD95C] ap-transition"
                   >
-                    Consultar inscripción
+                    Consultar
                   </a>
                 </div>
               </div>
 
-              <div className="ap-mt-10 ap-bg-[#FFFDF7] ap-border ap-border-[#E2D8C0] ap-rounded-3xl ap-p-4 ap-grid md:ap-grid-cols-[1fr_auto] ap-gap-4 ap-shadow-[0_16px_45px_rgba(70,55,20,0.08)]">
+              <div className="ap-mt-6 ap-bg-[#FFFDF7] ap-border ap-border-[#E2D8C0] ap-rounded-2xl ap-p-3 ap-grid md:ap-grid-cols-[1fr_auto] ap-gap-3 ap-shadow-[0_12px_30px_rgba(70,55,20,0.07)]">
                 <input
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   placeholder="Buscar curso, programa o modalidad"
-                  className="ap-w-full ap-bg-white ap-border ap-border-[#DED4BB] ap-rounded-full ap-px-5 ap-py-3 ap-text-[#111111] ap-text-sm placeholder:ap-text-[#8D8573] focus:ap-outline-none focus:ap-border-[#FFC730]"
+                  className="ap-w-full ap-bg-white ap-border ap-border-[#DED4BB] ap-rounded-full ap-px-5 ap-py-2.5 ap-text-[#111111] ap-text-sm placeholder:ap-text-[#8D8573] focus:ap-outline-none focus:ap-border-[#FFC730]"
                 />
 
                 <div className="ap-flex ap-gap-2 ap-overflow-x-auto">
@@ -123,12 +121,13 @@ const CoursesPage: React.FC = () => {
             </div>
 
             <div className="ap-px-5 md:ap-px-12 lg:ap-px-16 ap-py-12">
-              <div className="ap-grid ap-grid-cols-1 md:ap-grid-cols-2 xl:ap-grid-cols-3 ap-gap-6">
-                {filteredCourses.map((course: any) => (
-                  <CourseCatalogCard key={course.slug} course={course} />
-                ))}
+              <div className="ap-max-w-[1180px] ap-mx-auto">
+                <div className="ap-grid ap-grid-cols-1 sm:ap-grid-cols-2 lg:ap-grid-cols-3 xl:ap-grid-cols-4 ap-gap-5 ap-items-stretch">
+                  {filteredCourses.map((course: any) => (
+                    <CourseCatalogCard key={course.slug} course={course} />
+                  ))}
+                </div>
               </div>
-
               {filteredCourses.length === 0 && (
                 <div className="ap-text-center ap-text-[#6D6658] ap-py-20">
                   No encontramos cursos con ese criterio.
@@ -147,61 +146,104 @@ const CoursesPage: React.FC = () => {
 const CourseCatalogCard = ({ course }: { course: any }) => {
   const item = getCourseView(course);
 
+  const duration =
+    item.duration ??
+    course.duracion ??
+    course.duration ??
+    course.summaryDuration ??
+    "";
+
+  const modality =
+    item.modality ?? course.modalidad ?? course.modality ?? "Clases guiadas";
+
+  const mainBadge = course.badge ?? course.etiqueta ?? item.category;
+
   return (
-    <article className="ap-group ap-bg-[#FFFDF7] ap-border ap-border-[#DDD3B8] hover:ap-border-[#FFC730] ap-rounded-3xl ap-p-6 ap-min-h-[430px] ap-flex ap-flex-col ap-transition ap-shadow-[0_20px_55px_rgba(70,55,20,0.10)]">
-      <div className="ap-flex ap-items-center ap-justify-between ap-gap-3">
-        <span className="ap-text-xs ap-font-extrabold ap-tracking-[0.18em] ap-uppercase ap-text-[#8A6A00] ap-bg-[#FFF1B8] ap-border ap-border-[#FFE27A] ap-rounded-full ap-px-3 ap-py-1">
-          {item.category}
-        </span>
-
-        <span className="ap-text-xs ap-font-bold ap-text-[#7C745F]">2026</span>
-      </div>
-
-      <h2 className="ap-text-[#090909] ap-text-2xl ap-font-extrabold ap-leading-snug ap-mt-5">
-        {item.title}
-      </h2>
-
-      <p className="ap-text-[#4E473A] ap-text-sm ap-leading-6 ap-mt-3 ap-line-clamp-3">
-        {item.description}
-      </p>
-
-      <div className="ap-flex ap-flex-wrap ap-gap-2 ap-mt-5">
-        {item.tags.slice(0, 3).map((tag: string) => (
-          <span
-            key={tag}
-            className="ap-text-[11px] ap-font-semibold ap-text-[#3C362B] ap-bg-[#F4EEDC] ap-border ap-border-[#DED4BB] ap-rounded-full ap-px-3 ap-py-1"
-          >
-            {tag}
-          </span>
-        ))}
-      </div>
-
-      <div className="ap-mt-auto ap-pt-6">
-        <div className="ap-flex ap-items-end ap-gap-2 ap-flex-wrap">
-          <span className="ap-text-[#111111] ap-text-2xl ap-font-extrabold">
-            {formatGs(item.price)}
-          </span>
-
-          {item.price > 0 && (
-            <span className="ap-text-[#8A6A00] ap-text-base ap-font-extrabold ap-mb-1">
-              / mes
-            </span>
+    <article className="ap-group ap-bg-[#FFFDF7] ap-border ap-border-[#DDD3B8] hover:ap-border-[#FFC730] ap-rounded-2xl ap-overflow-hidden ap-flex ap-flex-col ap-transition ap-shadow-[0_14px_35px_rgba(70,55,20,0.08)]">
+      <Link to={`/cursos/${item.slug}`} className="ap-block">
+        <div className="ap-relative ap-h-[155px] ap-bg-[#111111] ap-overflow-hidden">
+          {course.fileURL ? (
+            <img
+              src={course.fileURL}
+              alt={item.title}
+              className="ap-w-full ap-h-full ap-object-cover ap-transition group-hover:ap-scale-[1.03]"
+            />
+          ) : (
+            <div className="ap-w-full ap-h-full ap-bg-[radial-gradient(circle_at_top_left,#FFC730_0%,#F3EEDC_38%,#111111_100%)]" />
           )}
 
-          {item.oldPrice > 0 && (
-            <span className="ap-text-[#8D8573] ap-text-sm ap-line-through ap-mb-1">
-              {formatGs(item.oldPrice)}
+          <div className="ap-absolute ap-top-3 ap-left-3 ap-flex ap-flex-wrap ap-gap-2">
+            <span className="ap-bg-[#FFC730] ap-text-[#111111] ap-text-[10px] ap-font-extrabold ap-tracking-[0.12em] ap-uppercase ap-rounded-full ap-px-3 ap-py-1">
+              {mainBadge}
+            </span>
+          </div>
+
+          <div className="ap-absolute ap-bottom-3 ap-right-3 ap-bg-white/95 ap-text-[#111111] ap-text-xs ap-font-extrabold ap-rounded-full ap-px-3 ap-py-1">
+            2026
+          </div>
+        </div>
+      </Link>
+
+      <div className="ap-p-5 ap-flex ap-flex-col ap-flex-1">
+        <Link to={`/cursos/${item.slug}`}>
+          <h2 className="ap-text-[#090909] ap-text-lg ap-font-extrabold ap-leading-snug ap-line-clamp-2 group-hover:ap-text-[#8A6A00] ap-transition">
+            {item.title}
+          </h2>
+        </Link>
+
+        <p className="ap-text-[#6D6658] ap-text-xs ap-font-medium ap-mt-2 ap-line-clamp-1">
+          {item.owner ?? "Max Planck"}
+        </p>
+
+        <p className="ap-text-[#4E473A] ap-text-sm ap-leading-6 ap-mt-3 ap-line-clamp-2">
+          {item.description}
+        </p>
+
+        <div className="ap-flex ap-flex-wrap ap-gap-2 ap-mt-4">
+          {/* {duration && (
+            <span className="ap-text-[11px] ap-font-bold ap-text-[#3C362B] ap-bg-[#F4EEDC] ap-border ap-border-[#DED4BB] ap-rounded-full ap-px-3 ap-py-1">
+              {duration}
+            </span>
+          )} */}
+
+          {modality && (
+            <span className="ap-text-[11px] ap-font-bold ap-text-[#3C362B] ap-bg-[#F4EEDC] ap-border ap-border-[#DED4BB] ap-rounded-full ap-px-3 ap-py-1">
+              {modality}
             </span>
           )}
         </div>
 
-        <Link
-          to={`/cursos/${item.slug}`}
-          className="ap-mt-6 ap-flex ap-items-center ap-justify-center ap-gap-2 ap-bg-[#FFC730] hover:ap-bg-[#FFD95C] ap-text-[#111111] ap-font-extrabold ap-rounded-full ap-px-5 ap-py-3 ap-transition"
-        >
-          Ver fechas y programa
-          <span className="ap-text-lg">→</span>
-        </Link>
+        <div className="ap-mt-auto ap-pt-5">
+          {item.price > 0 ? (
+            <div className="ap-flex ap-items-end ap-gap-2 ap-flex-wrap">
+              <span className="ap-text-[#111111] ap-text-xl ap-font-extrabold">
+                {formatGs(item.price)}
+              </span>
+
+              <span className="ap-text-[#8A6A00] ap-text-sm ap-font-extrabold ap-mb-0.5">
+                / mes
+              </span>
+
+              {item.oldPrice > 0 && (
+                <span className="ap-text-[#8D8573] ap-text-xs ap-line-through ap-mb-1">
+                  {formatGs(item.oldPrice)}
+                </span>
+              )}
+            </div>
+          ) : (
+            <span className="ap-text-[#111111] ap-text-lg ap-font-extrabold">
+              Consultar inversión
+            </span>
+          )}
+
+          <Link
+            to={`/cursos/${item.slug}`}
+            className="ap-mt-4 ap-flex ap-items-center ap-justify-center ap-gap-2 ap-bg-[#FFC730] hover:ap-bg-[#FFD95C] ap-text-[#111111] ap-font-extrabold ap-rounded-xl ap-px-5 ap-py-3 ap-text-sm ap-transition"
+          >
+            Ver programa
+            <span>→</span>
+          </Link>
+        </div>
       </div>
     </article>
   );

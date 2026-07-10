@@ -24,10 +24,10 @@ const CheckoutPage = () => {
   const MATRICULA = 50000;
 
   const item = course ? getCourseView(course) : null;
-  const coursePrice = item?.price ?? 0;
-  const matricula = MATRICULA;
+  const coursePrice = Number(item?.price ?? 0);
+  const matricula = Number(course?.matricula ?? 0);
   const total = coursePrice + matricula;
-  const courseIdToSend = course?.backendCourseId ?? 1;
+  const courseIdToSend = Number(course?.backendCourseId);
 
   const DEPARTAMENTOS_PY = [
     "Asunción (Capital)",
@@ -96,6 +96,13 @@ const CheckoutPage = () => {
         return;
       }
 
+      if (!courseIdToSend || Number.isNaN(courseIdToSend)) {
+        toast.error(
+          "Este curso no está vinculado correctamente al sistema de inscripciones.",
+        );
+        return;
+      }
+
       const response = await create({
         name: form.nombres,
         lastname: form.apellidos,
@@ -104,7 +111,7 @@ const CheckoutPage = () => {
         email: form.email,
         phone: form.telefono,
         courseId: courseIdToSend,
-        dueDate: dayjs().set("month", 1).toString(),
+        dueDate: dayjs().add(1, "month").format("YYYY-MM-DD"),
         whatsappOptIn: acceptWhatsapp,
       });
 
@@ -135,26 +142,28 @@ const CheckoutPage = () => {
   if (!course || !item) {
     return (
       <div className="ap-bg-[#F3EEDC] ap-min-h-screen ap-flex ap-items-center ap-justify-center">
-        <p className="ap-text-[#111111] ap-font-semibold">Curso no encontrado</p>
+        <p className="ap-text-[#111111] ap-font-semibold">
+          Curso no encontrado
+        </p>
       </div>
     );
   }
 
   if (!course) {
-  return (
-    <div className="ap-bg-[#F3EEDC] ap-min-h-screen ap-flex ap-items-center ap-justify-center ap-px-4">
-      <div className="ap-bg-[#FFFDF7] ap-border ap-border-[#DDD3B8] ap-rounded-3xl ap-p-8 ap-text-center ap-max-w-md">
-        <h1 className="ap-text-[#111111] ap-text-2xl ap-font-extrabold">
-          Curso no encontrado
-        </h1>
+    return (
+      <div className="ap-bg-[#F3EEDC] ap-min-h-screen ap-flex ap-items-center ap-justify-center ap-px-4">
+        <div className="ap-bg-[#FFFDF7] ap-border ap-border-[#DDD3B8] ap-rounded-3xl ap-p-8 ap-text-center ap-max-w-md">
+          <h1 className="ap-text-[#111111] ap-text-2xl ap-font-extrabold">
+            Curso no encontrado
+          </h1>
 
-        <p className="ap-text-[#5D574A] ap-text-sm ap-leading-6 ap-mt-3">
-          El curso solicitado no existe o ya no está disponible.
-        </p>
+          <p className="ap-text-[#5D574A] ap-text-sm ap-leading-6 ap-mt-3">
+            El curso solicitado no existe o ya no está disponible.
+          </p>
+        </div>
       </div>
-    </div>
-  );
-}
+    );
+  }
 
   if (!isCourseEnrollmentEnabled(course)) {
     return (
