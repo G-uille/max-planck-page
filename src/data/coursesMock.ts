@@ -714,7 +714,7 @@ export const courses: Course[] = [
     dedicacion: "Clases guiadas + práctica semanal",
     modalidad: "Presencial / híbrido según grupo",
 
-    precio: 270000,
+    precio: 250000,
     precioOriginal: 0,
     matricula: 0,
 
