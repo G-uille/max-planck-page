@@ -16,6 +16,8 @@ import {
   getCourseWhatsappUrl,
   isCourseEnrollmentEnabled,
 } from "../../../utils/courseView";
+
+import { getCourseDiscountInfo } from "../../../utils/courseView";
 import contactUs from "../../../pages/store/data/contact";
 import { useScrollToTopWindow } from "../../../hooks/use-scrollToTop";
 
