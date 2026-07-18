@@ -727,18 +727,55 @@ const FaqSection = ({ faqs }: { faqs: any[] }) => {
 
 const MobileEnrollmentBar = ({ course }: { course: any }) => {
   const item = getCourseView(course);
+  const discount = getCourseDiscountInfo(course, item);
 
   return (
     <div className="ap-fixed ap-bottom-0 ap-left-0 ap-right-0 ap-z-[100000] ap-bg-[#FFFDF7] ap-border-t ap-border-[#DDD3B8] ap-p-4 ap-shadow-[0_-12px_35px_rgba(70,55,20,0.12)]">
-      <div className="ap-flex ap-items-center ap-justify-between ap-gap-3 ap-mb-3">
-        <span className="ap-text-[#111111] ap-text-sm ap-font-bold ap-line-clamp-1">
-          {item.title}
-        </span>
+      <div className="ap-flex ap-items-start ap-justify-between ap-gap-3 ap-mb-3">
+        <div className="ap-min-w-0 ap-flex-1">
+          <span className="ap-block ap-text-[#111111] ap-text-sm ap-font-bold ap-line-clamp-1">
+            {item.title}
+          </span>
 
-        <span className="ap-text-[#8A6A00] ap-font-extrabold">
-          {item.price > 0 ? formatGs(item.price) : "Consultar"}
-        </span>
+          {discount.hasDiscount && (
+            <div className="ap-mt-1 ap-flex ap-flex-wrap ap-items-center ap-gap-2">
+              <span className="ap-rounded-full ap-bg-[#FFC730] ap-px-2 ap-py-0.5 ap-text-[10px] ap-font-extrabold ap-text-[#111111]">
+                {discount.label}
+              </span>
+
+              <span className="ap-text-xs ap-font-bold ap-text-[#8D8573] ap-line-through">
+                {formatGs(discount.oldPrice)}
+              </span>
+            </div>
+          )}
+
+          {discount.hasDiscount && (
+            <span className="ap-mt-1 ap-block ap-text-[11px] ap-font-bold ap-text-[#245A16]">
+              Ahorrás {formatGs(discount.discountAmount)} por mes
+            </span>
+          )}
+        </div>
+
+        <div className="ap-shrink-0 ap-text-right">
+          <span className="ap-block ap-text-[#8A6A00] ap-text-lg ap-font-extrabold">
+            {item.price > 0 ? formatGs(item.price) : "Consultar"}
+          </span>
+
+          {item.price > 0 && (
+            <span className="ap-block ap-text-[11px] ap-font-bold ap-text-[#8D8573]">
+              / mes
+            </span>
+          )}
+        </div>
       </div>
+
+      {discount.hasDiscount && discount.until && (
+        <div className="ap-mb-3 ap-rounded-xl ap-border ap-border-[#B8E986] ap-bg-[#E7F8D8] ap-px-3 ap-py-2">
+          <p className="ap-text-[11px] ap-font-bold ap-text-[#245A16]">
+            {discount.text} · {discount.until}
+          </p>
+        </div>
+      )}
 
       {isCourseEnrollmentEnabled(course) ? (
         <Link

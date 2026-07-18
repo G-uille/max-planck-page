@@ -11,6 +11,7 @@ import dayjs from "dayjs";
 import CheckoutSuccess from "../../../components/courses/CheckoutSuccess";
 import {
   getCourseView,
+  getCourseDiscountInfo,
   getEnrollmentDisabledMessage,
   isCourseEnrollmentEnabled,
 } from "../../../utils/courseView";
@@ -24,26 +25,17 @@ const CheckoutPage = () => {
   const MATRICULA = 50000;
 
   const item = course ? getCourseView(course) : null;
-  const coursePrice = Number(item?.price ?? 0);
+  const discount = course && item ? getCourseDiscountInfo(course, item) : null;
+
+  const coursePrice = Number(discount?.currentPrice ?? item?.price ?? 0);
   const matricula = Number(course?.matricula ?? 0);
   const total = coursePrice + matricula;
   const courseIdToSend = Number(course?.backendCourseId);
 
-  const itemOldPrice = Number((item as any)?.oldPrice || 0);
-  const courseOldPrice = Number((course as any)?.precioOriginal || 0);
-
-  const originalCoursePrice =
-    itemOldPrice > coursePrice
-      ? itemOldPrice
-      : courseOldPrice > coursePrice
-        ? courseOldPrice
-        : 0;
-
-  const discountPercent = Number((course as any)?.descuento ?? 0);
-
-  const hasDiscount = coursePrice > 0 && originalCoursePrice > coursePrice;
-
-  const discountAmount = hasDiscount ? originalCoursePrice - coursePrice : 0;
+  const originalCoursePrice = Number(discount?.oldPrice ?? 0);
+  const discountPercent = Number(discount?.discountPercent ?? 0);
+  const hasDiscount = Boolean(discount?.hasDiscount);
+  const discountAmount = Number(discount?.discountAmount ?? 0);
 
   const DEPARTAMENTOS_PY = [
     "Asunción (Capital)",
@@ -484,20 +476,69 @@ const CheckoutPage = () => {
         {display.smAndDown && (
           <div className="ap-fixed ap-bottom-0 ap-left-0 ap-right-0 ap-bg-[#FFFDF7] ap-z-[100000] ap-border-t ap-border-[#DDD3B8] ap-p-4 ap-px-6 ap-shadow-[0_-12px_35px_rgba(70,55,20,0.12)]">
             <div className="ap-flex ap-flex-col ap-gap-2 ap-mb-3">
-              <div className="ap-flex ap-justify-between ap-items-center ap-gap-3">
-                <span className="ap-text-[#111111] ap-w-8/12 ap-text-sm ap-font-bold ap-whitespace-nowrap ap-overflow-hidden ap-text-ellipsis">
-                  {item.title}
-                </span>
+              <div className="ap-flex ap-justify-between ap-items-start ap-gap-3">
+                <div className="ap-min-w-0 ap-flex-1">
+                  <span className="ap-block ap-text-[#111111] ap-text-sm ap-font-bold ap-whitespace-nowrap ap-overflow-hidden ap-text-ellipsis">
+                    {item.title}
+                  </span>
 
-                <span className="ap-text-[#8A6A00] ap-font-extrabold">
-                  {numberFormatGuaranies(total)}
-                </span>
+                  {hasDiscount && (
+                    <div className="ap-mt-1 ap-flex ap-flex-wrap ap-items-center ap-gap-2">
+                      <span className="ap-rounded-full ap-bg-[#FFC730] ap-px-2 ap-py-0.5 ap-text-[10px] ap-font-extrabold ap-text-[#111111]">
+                        {discount?.label ?? `${discountPercent}% OFF`}
+                      </span>
+
+                      <span className="ap-text-xs ap-font-bold ap-text-[#8D8573] ap-line-through">
+                        {numberFormatGuaranies(originalCoursePrice)}
+                      </span>
+                    </div>
+                  )}
+
+                  {hasDiscount && (
+                    <span className="ap-mt-1 ap-block ap-text-[11px] ap-font-bold ap-text-[#245A16]">
+                      Ahorrás {numberFormatGuaranies(discountAmount)} por mes
+                    </span>
+                  )}
+                </div>
+
+                <div className="ap-shrink-0 ap-text-right">
+                  <span className="ap-block ap-text-[#8A6A00] ap-text-lg ap-font-extrabold">
+                    {numberFormatGuaranies(total)}
+                  </span>
+
+                  <span className="ap-block ap-text-[11px] ap-text-[#6D6658]">
+                    total inicial
+                  </span>
+                </div>
               </div>
 
-              <div className="ap-text-xs ap-text-[#6D6658] ap-flex ap-justify-between ap-gap-3">
+              <div className="ap-text-xs ap-text-[#6D6658] ap-grid ap-grid-cols-2 ap-gap-2">
                 <span>Curso: {numberFormatGuaranies(coursePrice)}</span>
-                <span>Matrícula: {numberFormatGuaranies(matricula)}</span>
+                <span className="ap-text-right">
+                  Matrícula:{" "}
+                  {matricula > 0 ? numberFormatGuaranies(matricula) : "Gs. 0"}
+                </span>
               </div>
+
+              {hasDiscount && (
+                <div className="ap-rounded-xl ap-bg-[#E7F8D8] ap-border ap-border-[#B8E986] ap-px-3 ap-py-2">
+                  <div className="ap-flex ap-items-center ap-justify-between ap-gap-3">
+                    <span className="ap-text-[11px] ap-font-bold ap-text-[#245A16]">
+                      Descuento {discountPercent}%
+                    </span>
+
+                    <span className="ap-text-[11px] ap-font-extrabold ap-text-[#245A16]">
+                      -{numberFormatGuaranies(discountAmount)}
+                    </span>
+                  </div>
+
+                  {discount?.until && (
+                    <p className="ap-mt-0.5 ap-text-[10px] ap-font-medium ap-text-[#3C6D2A]">
+                      {discount.until}
+                    </p>
+                  )}
+                </div>
+              )}
             </div>
 
             <label className="ap-flex ap-items-start ap-gap-2 ap-mb-3">

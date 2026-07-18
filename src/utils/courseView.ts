@@ -115,6 +115,43 @@ export const formatGs = (value?: number) => {
     .replace("PYG", "Gs.");
 };
 
+export const getCourseDiscountInfo = (course: any, item?: any) => {
+  const currentPrice = Number(
+    item?.price || course?.precio || course?.price || 0,
+  );
+
+  const itemOldPrice = Number(item?.oldPrice || 0);
+
+  const courseOldPrice = parsePrice(
+    course?.precioOriginal ??
+      course?.precioAnterior ??
+      course?.oldPrice ??
+      course?.originalPrice,
+  );
+
+  const oldPrice =
+    itemOldPrice > currentPrice
+      ? itemOldPrice
+      : courseOldPrice > currentPrice
+        ? courseOldPrice
+        : 0;
+
+  const discountPercent = Number(course?.descuento || 0);
+  const hasDiscount = currentPrice > 0 && oldPrice > currentPrice;
+  const discountAmount = hasDiscount ? oldPrice - currentPrice : 0;
+
+  return {
+    currentPrice,
+    oldPrice,
+    discountPercent,
+    discountAmount,
+    hasDiscount,
+    label: course?.promoLabel || `${discountPercent}% OFF`,
+    text: course?.promoText || "Semana de descuento",
+    until: course?.promoUntil || "",
+  };
+};
+
 export const getCourseView = (course: any) => {
   const rawDuration =
     course.duracion ?? course.duration ?? course.semanas ?? course.weeks;
@@ -143,9 +180,19 @@ export const getCourseView = (course: any) => {
     course.descripcion ?? course.description ?? course.shortDescription,
     "Programa académico con clases, práctica guiada, materiales digitales y acompañamiento docente.",
   );
-
   const price = parsePrice(course.precio ?? course.price);
-  const oldPrice = parsePrice(course.precioAnterior ?? course.oldPrice);
+
+  const oldPrice = parsePrice(
+    course.precioOriginal ??
+      course.precioAnterior ??
+      course.oldPrice ??
+      course.originalPrice,
+  );
+
+  const discount = getCourseDiscountInfo(course, {
+    price,
+    oldPrice,
+  });
 
   const fallbackTags = [finalDuration, modality, audience];
 
@@ -160,6 +207,7 @@ export const getCourseView = (course: any) => {
     owner,
     price,
     oldPrice,
+    discount,
     tags: normalizeTags(course.tags, fallbackTags),
   };
 };
