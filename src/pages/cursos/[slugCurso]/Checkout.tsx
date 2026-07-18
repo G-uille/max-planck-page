@@ -29,9 +29,15 @@ const CheckoutPage = () => {
   const total = coursePrice + matricula;
   const courseIdToSend = Number(course?.backendCourseId);
 
-  const originalCoursePrice = Number(
-    (item as any)?.oldPrice ?? (course as any)?.precioOriginal ?? 0,
-  );
+  const itemOldPrice = Number((item as any)?.oldPrice || 0);
+  const courseOldPrice = Number((course as any)?.precioOriginal || 0);
+
+  const originalCoursePrice =
+    itemOldPrice > coursePrice
+      ? itemOldPrice
+      : courseOldPrice > coursePrice
+        ? courseOldPrice
+        : 0;
 
   const discountPercent = Number((course as any)?.descuento ?? 0);
 

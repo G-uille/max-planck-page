@@ -11,10 +11,19 @@ import contactUs from "../store/data/contact";
 const WHATSAPP_URL = contactUs.walink;
 
 const getDiscountInfo = (course: any, item: any) => {
-  const currentPrice = Number(item?.price ?? course?.precio ?? 0);
-  const oldPrice = Number(item?.oldPrice ?? course?.precioOriginal ?? 0);
-  const discountPercent = Number(course?.descuento ?? 0);
+  const currentPrice = Number(item?.price || course?.precio || 0);
 
+  const itemOldPrice = Number(item?.oldPrice || 0);
+  const courseOldPrice = Number(course?.precioOriginal || 0);
+
+  const oldPrice =
+    itemOldPrice > currentPrice
+      ? itemOldPrice
+      : courseOldPrice > currentPrice
+        ? courseOldPrice
+        : 0;
+
+  const discountPercent = Number(course?.descuento || 0);
   const hasDiscount = currentPrice > 0 && oldPrice > currentPrice;
   const discountAmount = hasDiscount ? oldPrice - currentPrice : 0;
 
@@ -24,8 +33,9 @@ const getDiscountInfo = (course: any, item: any) => {
     discountPercent,
     discountAmount,
     hasDiscount,
-    label: course?.promoLabel ?? `${discountPercent}% OFF`,
-    until: course?.promoUntil ?? "",
+    label: course?.promoLabel || `${discountPercent}% OFF`,
+    text: course?.promoText || "Semana de descuento",
+    until: course?.promoUntil || "",
   };
 };
 
