@@ -10,6 +10,25 @@ import contactUs from "../store/data/contact";
 
 const WHATSAPP_URL = contactUs.walink;
 
+const getDiscountInfo = (course: any, item: any) => {
+  const currentPrice = Number(item?.price ?? course?.precio ?? 0);
+  const oldPrice = Number(item?.oldPrice ?? course?.precioOriginal ?? 0);
+  const discountPercent = Number(course?.descuento ?? 0);
+
+  const hasDiscount = currentPrice > 0 && oldPrice > currentPrice;
+  const discountAmount = hasDiscount ? oldPrice - currentPrice : 0;
+
+  return {
+    currentPrice,
+    oldPrice,
+    discountPercent,
+    discountAmount,
+    hasDiscount,
+    label: course?.promoLabel ?? `${discountPercent}% OFF`,
+    until: course?.promoUntil ?? "",
+  };
+};
+
 const CoursesPage: React.FC = () => {
   const display = useDisplay();
   const [query, setQuery] = React.useState("");
@@ -157,6 +176,7 @@ const CourseCatalogCard = ({ course }: { course: any }) => {
     item.modality ?? course.modalidad ?? course.modality ?? "Clases guiadas";
 
   const mainBadge = course.badge ?? course.etiqueta ?? item.category;
+  const discount = getDiscountInfo(course, item);
 
   return (
     <article className="ap-group ap-bg-[#FFFDF7] ap-border ap-border-[#DDD3B8] hover:ap-border-[#FFC730] ap-rounded-2xl ap-overflow-hidden ap-flex ap-flex-col ap-transition ap-shadow-[0_14px_35px_rgba(70,55,20,0.08)]">
@@ -177,6 +197,12 @@ const CourseCatalogCard = ({ course }: { course: any }) => {
               {mainBadge}
             </span>
           </div>
+
+          {discount.hasDiscount && (
+            <div className="ap-absolute ap-top-3 ap-right-3 ap-rounded-full ap-bg-[#111111] ap-border ap-border-[#FFC730] ap-px-3 ap-py-1 ap-text-[10px] ap-font-extrabold ap-text-[#FFC730] ap-shadow-lg">
+              {discount.label}
+            </div>
+          )}
 
           <div className="ap-absolute ap-bottom-3 ap-right-3 ap-bg-white/95 ap-text-[#111111] ap-text-xs ap-font-extrabold ap-rounded-full ap-px-3 ap-py-1">
             2026
@@ -215,19 +241,38 @@ const CourseCatalogCard = ({ course }: { course: any }) => {
 
         <div className="ap-mt-auto ap-pt-5">
           {item.price > 0 ? (
-            <div className="ap-flex ap-items-end ap-gap-2 ap-flex-wrap">
-              <span className="ap-text-[#111111] ap-text-xl ap-font-extrabold">
-                {formatGs(item.price)}
-              </span>
+            <div className="ap-flex ap-flex-col ap-gap-1">
+              {discount.hasDiscount && (
+                <div className="ap-flex ap-items-center ap-gap-2">
+                  <span className="ap-text-[#8D8573] ap-text-xs ap-font-bold">
+                    Antes
+                  </span>
+                  <span className="ap-text-[#8D8573] ap-text-sm ap-font-extrabold ap-line-through">
+                    {formatGs(discount.oldPrice)}
+                  </span>
+                </div>
+              )}
 
-              <span className="ap-text-[#8A6A00] ap-text-sm ap-font-extrabold ap-mb-0.5">
-                / mes
-              </span>
-
-              {item.oldPrice > 0 && (
-                <span className="ap-text-[#8D8573] ap-text-xs ap-line-through ap-mb-1">
-                  {formatGs(item.oldPrice)}
+              <div className="ap-flex ap-items-end ap-gap-2 ap-flex-wrap">
+                <span className="ap-text-[#111111] ap-text-xl ap-font-extrabold">
+                  {formatGs(item.price)}
                 </span>
+
+                <span className="ap-text-[#8A6A00] ap-text-sm ap-font-extrabold ap-mb-0.5">
+                  / mes
+                </span>
+
+                {discount.hasDiscount && (
+                  <span className="ap-rounded-full ap-bg-[#FFC730] ap-px-2 ap-py-0.5 ap-text-[10px] ap-font-extrabold ap-text-[#111111]">
+                    {discount.label}
+                  </span>
+                )}
+              </div>
+
+              {discount.hasDiscount && (
+                <p className="ap-text-[11px] ap-font-semibold ap-text-[#245A16]">
+                  Ahorrás {formatGs(discount.discountAmount)} por mes
+                </p>
               )}
             </div>
           ) : (

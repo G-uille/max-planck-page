@@ -29,6 +29,16 @@ const CheckoutPage = () => {
   const total = coursePrice + matricula;
   const courseIdToSend = Number(course?.backendCourseId);
 
+  const originalCoursePrice = Number(
+    (item as any)?.oldPrice ?? (course as any)?.precioOriginal ?? 0,
+  );
+
+  const discountPercent = Number((course as any)?.descuento ?? 0);
+
+  const hasDiscount = coursePrice > 0 && originalCoursePrice > coursePrice;
+
+  const discountAmount = hasDiscount ? originalCoursePrice - coursePrice : 0;
+
   const DEPARTAMENTOS_PY = [
     "Asunción (Capital)",
     "Alto Paraguay",
@@ -328,6 +338,36 @@ const CheckoutPage = () => {
                 {item.title}
               </p>
 
+              {hasDiscount && (
+                <div className="ap-rounded-xl ap-bg-[#FFF1B8] ap-border ap-border-[#FFE27A] ap-px-3 ap-py-2">
+                  <p className="ap-text-xs ap-font-extrabold ap-text-[#8A6A00]">
+                    Semana de descuento · {discountPercent}% OFF
+                  </p>
+                </div>
+              )}
+
+              {hasDiscount && (
+                <div className="ap-flex ap-justify-between ap-items-center">
+                  <span className="ap-text-sm ap-text-[#6D6658]">
+                    Precio regular
+                  </span>
+                  <span className="ap-text-sm ap-font-extrabold ap-text-[#8D8573] ap-line-through">
+                    {numberFormatGuaranies(originalCoursePrice)}
+                  </span>
+                </div>
+              )}
+
+              {hasDiscount && (
+                <div className="ap-flex ap-justify-between ap-items-center">
+                  <span className="ap-text-sm ap-text-[#245A16] ap-font-bold">
+                    Descuento {discountPercent}%
+                  </span>
+                  <span className="ap-text-sm ap-font-extrabold ap-text-[#245A16]">
+                    -{numberFormatGuaranies(discountAmount)}
+                  </span>
+                </div>
+              )}
+
               <div className="ap-flex ap-justify-between ap-items-center">
                 <span className="ap-text-sm ap-text-[#6D6658]">
                   Precio del curso
@@ -355,8 +395,8 @@ const CheckoutPage = () => {
               </div>
 
               <span className="ap-text-xs ap-text-[#6D6658] ap-leading-5">
-                * El total incluye la matrícula, que es un pago único, más la
-                primera mensualidad.
+                * El total corresponde a la primera mensualidad con el descuento
+                aplicado, más la matrícula si corresponde.
               </span>
             </div>
 

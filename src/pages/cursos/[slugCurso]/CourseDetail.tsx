@@ -21,6 +21,26 @@ import { useScrollToTopWindow } from "../../../hooks/use-scrollToTop";
 
 const WHATSAPP_URL = contactUs.walink;
 
+const getDiscountInfo = (course: any, item: any) => {
+  const currentPrice = Number(item?.price ?? course?.precio ?? 0);
+  const oldPrice = Number(item?.oldPrice ?? course?.precioOriginal ?? 0);
+  const discountPercent = Number(course?.descuento ?? 0);
+
+  const hasDiscount = currentPrice > 0 && oldPrice > currentPrice;
+  const discountAmount = hasDiscount ? oldPrice - currentPrice : 0;
+
+  return {
+    currentPrice,
+    oldPrice,
+    discountPercent,
+    discountAmount,
+    hasDiscount,
+    label: course?.promoLabel ?? `${discountPercent}% OFF`,
+    text: course?.promoText ?? "Semana de descuento",
+    until: course?.promoUntil ?? "",
+  };
+};
+
 export const CourseDetailPage = () => {
   const { slugCurso } = useParams();
   const course = courses.find((c: any) => c.slug === slugCurso);
@@ -274,6 +294,7 @@ const CourseSummaryStrip = ({
 const EnrollmentAside = ({ course }: { course: any }) => {
   const item = getCourseView(course);
   const whatsappUrl = getCourseWhatsappUrl(course) || WHATSAPP_URL;
+  const discount = getDiscountInfo(course, item);
 
   return (
     <aside className="ap-bg-[#FFFDF7] ap-text-[#111111] ap-border ap-border-[#DDD3B8] ap-rounded-2xl ap-overflow-hidden ap-shadow-[0_24px_70px_rgba(0,0,0,0.18)] ap-h-fit lg:ap-sticky lg:ap-top-[105px]">
@@ -286,6 +307,11 @@ const EnrollmentAside = ({ course }: { course: any }) => {
           />
         ) : (
           <div className="ap-w-full ap-h-full ap-bg-[radial-gradient(circle_at_top_left,#FFC730_0%,#1B1B1B_42%,#111111_100%)]" />
+        )}
+        {discount.hasDiscount && (
+          <div className="ap-absolute ap-top-3 ap-right-3 ap-rounded-full ap-bg-[#FFC730] ap-px-4 ap-py-2 ap-text-xs ap-font-extrabold ap-text-[#111111] ap-shadow-lg">
+            {discount.label}
+          </div>
         )}
       </div>
 
@@ -302,19 +328,50 @@ const EnrollmentAside = ({ course }: { course: any }) => {
 
         <div className="ap-mt-4">
           {item.price > 0 ? (
-            <div className="ap-flex ap-items-end ap-gap-2 ap-flex-wrap">
-              <strong className="ap-text-3xl ap-font-extrabold">
-                {formatGs(item.price)}
-              </strong>
+            <div className="ap-flex ap-flex-col ap-gap-2">
+              {discount.hasDiscount && (
+                <div className="ap-inline-flex ap-w-fit ap-items-center ap-gap-2 ap-rounded-full ap-bg-[#FFF1B8] ap-border ap-border-[#FFE27A] ap-px-3 ap-py-1">
+                  <span className="ap-text-xs ap-font-extrabold ap-text-[#8A6A00]">
+                    {discount.text}
+                  </span>
+                  <span className="ap-text-xs ap-font-extrabold ap-text-[#111111]">
+                    {discount.label}
+                  </span>
+                </div>
+              )}
 
-              <span className="ap-text-[#8A6A00] ap-font-bold ap-mb-1">
-                / mes
-              </span>
+              {discount.hasDiscount && (
+                <div className="ap-flex ap-items-center ap-gap-2">
+                  <span className="ap-text-sm ap-font-semibold ap-text-[#8D8573]">
+                    Antes
+                  </span>
+                  <span className="ap-text-lg ap-font-extrabold ap-text-[#8D8573] ap-line-through">
+                    {formatGs(discount.oldPrice)}
+                  </span>
+                </div>
+              )}
 
-              {item.oldPrice > 0 && (
-                <span className="ap-text-gray-400 ap-line-through ap-mb-1">
-                  {formatGs(item.oldPrice)}
+              <div className="ap-flex ap-items-end ap-gap-2 ap-flex-wrap">
+                <strong className="ap-text-3xl ap-font-extrabold">
+                  {formatGs(item.price)}
+                </strong>
+
+                <span className="ap-text-[#8A6A00] ap-font-bold ap-mb-1">
+                  / mes
                 </span>
+              </div>
+
+              {discount.hasDiscount && (
+                <div className="ap-rounded-xl ap-bg-[#E7F8D8] ap-border ap-border-[#B8E986] ap-px-3 ap-py-2">
+                  <p className="ap-text-xs ap-font-bold ap-text-[#245A16]">
+                    Ahorrás {formatGs(discount.discountAmount)} por mes.
+                  </p>
+                  {discount.until && (
+                    <p className="ap-text-[11px] ap-text-[#3C6D2A] ap-mt-0.5">
+                      {discount.until}
+                    </p>
+                  )}
+                </div>
               )}
             </div>
           ) : (

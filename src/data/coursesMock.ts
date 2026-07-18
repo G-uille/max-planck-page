@@ -714,9 +714,13 @@ export const courses: Course[] = [
     dedicacion: "Clases guiadas + práctica semanal",
     modalidad: "Presencial / híbrido según grupo",
 
-    precio: 260000,
-    precioOriginal: 0,
+    precio: 208000,
+    precioOriginal: 260000,
+    descuento: 20,
     matricula: 0,
+    promoLabel: "20% OFF",
+    promoText: "Semana de descuento",
+    promoUntil: "Disponible hasta el sábado 25 de julio",
 
     inscriptionEnabled: true,
 
