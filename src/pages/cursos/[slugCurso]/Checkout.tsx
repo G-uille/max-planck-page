@@ -1,7 +1,7 @@
 import * as React from "react";
 import useDisplay from "../../../hooks/use-display";
 import { useParams } from "react-router-dom";
-import { courses } from "../../../data/coursesMock";
+import usePublicCourses from "../../../hooks/use-public-courses";
 import { Button, Checkbox, CircularProgress } from "@mui/material";
 import { numberFormatGuaranies } from "../../../utils/numberFormat";
 import MUIInput from "../../../components/common/MUIInput";
@@ -18,6 +18,7 @@ import {
 
 const CheckoutPage = () => {
   const { slugCurso } = useParams();
+  const { courses, loading: coursesLoading } = usePublicCourses();
   const course = courses.find((c: any) => c.slug === slugCurso);
   const display = useDisplay();
   const { create, loading } = useInscriptions();
@@ -146,6 +147,10 @@ const CheckoutPage = () => {
       );
     }
   };
+
+  if (coursesLoading) {
+    return <div className="ap-min-h-screen ap-flex ap-items-center ap-justify-center"><CircularProgress /></div>;
+  }
 
   if (!course || !item) {
     return (

@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Link } from "react-router-dom";
 import useDisplay from "../../hooks/use-display";
-import { courses } from "../../data/coursesMock";
+import usePublicCourses from "../../hooks/use-public-courses";
 import SectionFadeIn from "../../components/common/SectionFadeIn";
 import { useScrollToTopWindow } from "../../hooks/use-scrollToTop";
 import CoursesBreadcrumbs from "../../components/courses/CoursesBreadcrumbs";
@@ -41,6 +41,7 @@ const getDiscountInfo = (course: any, item: any) => {
 
 const CoursesPage: React.FC = () => {
   const display = useDisplay();
+  const { courses } = usePublicCourses();
   const [query, setQuery] = React.useState("");
   const [category, setCategory] = React.useState("Todos");
 
@@ -49,7 +50,7 @@ const CoursesPage: React.FC = () => {
   const categories = React.useMemo(() => {
     const list = courses.map((course: any) => getCourseView(course).category);
     return ["Todos", ...Array.from(new Set(list))];
-  }, []);
+  }, [courses]);
 
   const filteredCourses = React.useMemo(() => {
     return courses.filter((course: any) => {
@@ -65,7 +66,7 @@ const CoursesPage: React.FC = () => {
 
       return matchesQuery && matchesCategory;
     });
-  }, [query, category]);
+  }, [courses, query, category]);
 
   return (
     <SectionFadeIn

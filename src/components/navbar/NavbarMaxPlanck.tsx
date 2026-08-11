@@ -24,7 +24,7 @@ import useDisplay from "../../hooks/use-display"
 
 import logoSVG from "../../assets/svg/logo-letras_2.svg";
 import contactUs from "../../pages/store/data/contact";
-import { courses } from "../../data/coursesMock";
+import usePublicCourses from "../../hooks/use-public-courses";
 
 const AULA_URL = "https://cursos.cursillomaxplanck.com/";
 
@@ -37,7 +37,7 @@ type MegaItem = {
   keywords?: string[];
 };
 
-const findCoursePath = (keywords: string[]) => {
+const findCoursePath = (courses: any[], keywords: string[]) => {
   const match = courses.find((course: any) => {
     const text = `
       ${course.slug ?? ""}
@@ -111,6 +111,7 @@ const recursosItems: MegaItem[] = [
 const NavbarMaxPlanck: React.FC = () => {
   const navigate = useNavigate();
   const display = useDisplay()
+  const { courses } = usePublicCourses();
 
   const [megaMenu, setMegaMenu] = React.useState<
     "programas" | "recursos" | null
@@ -212,7 +213,7 @@ const NavbarMaxPlanck: React.FC = () => {
     }
 
     if (item.keywords) {
-      goTo(findCoursePath(item.keywords));
+      goTo(findCoursePath(courses, item.keywords));
       return;
     }
 

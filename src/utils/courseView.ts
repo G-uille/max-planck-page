@@ -279,6 +279,31 @@ export const getCourseDates = (course: any) => {
     });
   }
 
+  if (Array.isArray(course.modalidadRows) && course.modalidadRows.length > 0) {
+    return course.modalidadRows.map((item: any) => ({
+      date: toText(item.tag ?? item.mode, "Horario"),
+      time: toText(item.title, "Horario a confirmar"),
+      spots: toText(item.desc ?? item.description, ""),
+    }));
+  }
+
+  if (Array.isArray(course.fechasHorarios) && course.fechasHorarios.length > 0) {
+    return course.fechasHorarios.map((item: any) => ({
+      date: toText(item, "Fecha a confirmar"),
+      time: "",
+      spots: "",
+    }));
+  }
+
+  const estimatedStart = course.inicioEstimado ?? course.fechaInicioFin;
+  if (estimatedStart) {
+    return [{
+      date: toText(estimatedStart, "Inicio próximo"),
+      time: toText(course.clasesEnVivo ?? course.days_and_hours, ""),
+      spots: "Cupos limitados",
+    }];
+  }
+
   return [
     {
       date: "Inicio próximo",

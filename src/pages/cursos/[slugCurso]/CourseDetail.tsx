@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useParams, Link } from "react-router-dom";
-import { courses } from "../../../data/coursesMock";
+import usePublicCourses from "../../../hooks/use-public-courses";
 import SectionFadeIn from "../../../components/common/SectionFadeIn";
 import useDisplay from "../../../hooks/use-display";
 import CoursesBreadcrumbs from "../../../components/courses/CoursesBreadcrumbs";
@@ -54,24 +54,14 @@ const getDiscountInfo = (course: any, item: any) => {
 
 export const CourseDetailPage = () => {
   const { slugCurso } = useParams();
+  const { courses, loading } = usePublicCourses();
   const course = courses.find((c: any) => c.slug === slugCurso);
   const display = useDisplay();
 
   useScrollToTopWindow();
 
-  if (!course) {
-    return (
-      <div className="ap-bg-[#F3EEDC] ap-min-h-screen ap-flex ap-items-center ap-justify-center">
-        <p className="ap-text-[#111111] ap-font-semibold">
-          Curso no encontrado
-        </p>
-      </div>
-    );
-  }
-
-  const item = getCourseView(course);
-  const benefits = getCourseBenefits(course);
   const modules = React.useMemo(() => {
+    if (!course) return [];
     const rawModules = Array.isArray((course as any).modules)
       ? (course as any).modules
       : Array.isArray((course as any).programa)
@@ -109,6 +99,21 @@ export const CourseDetailPage = () => {
       };
     });
   }, [course]);
+
+  if (loading) {
+    return <div className="ap-bg-[#F3EEDC] ap-min-h-screen ap-flex ap-items-center ap-justify-center">Cargando curso...</div>;
+  }
+
+  if (!course) {
+    return (
+      <div className="ap-bg-[#F3EEDC] ap-min-h-screen ap-flex ap-items-center ap-justify-center">
+        <p className="ap-text-[#111111] ap-font-semibold">Curso no encontrado</p>
+      </div>
+    );
+  }
+
+  const item = getCourseView(course);
+  const benefits = getCourseBenefits(course);
   const dates = getCourseDates(course);
   const faqs = getCourseFaqs(course);
 
