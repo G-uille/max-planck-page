@@ -26,6 +26,7 @@ export interface Course {
   requisitos: string[];
   programa: Program[];
   precio: number;
+  matricula?: number;
   precioOriginal?: number;
   descuento?: number;
   status?: boolean;

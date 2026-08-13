@@ -23,8 +23,6 @@ const CheckoutPage = () => {
   const display = useDisplay();
   const { create, loading } = useInscriptions();
 
-  const MATRICULA = 50000;
-
   const item = course ? getCourseView(course) : null;
   const discount = course && item ? getCourseDiscountInfo(course, item) : null;
 
@@ -383,7 +381,7 @@ const CheckoutPage = () => {
               <div className="ap-flex ap-justify-between ap-items-center">
                 <span className="ap-text-sm ap-text-[#6D6658]">Matrícula</span>
                 <span className="ap-text-sm ap-font-extrabold ap-text-[#111111]">
-                  {numberFormatGuaranies(matricula)}
+                  {matricula > 0 ? numberFormatGuaranies(matricula) : "Sin matrícula"}
                 </span>
               </div>
 
@@ -521,7 +519,7 @@ const CheckoutPage = () => {
                 <span>Curso: {numberFormatGuaranies(coursePrice)}</span>
                 <span className="ap-text-right">
                   Matrícula:{" "}
-                  {matricula > 0 ? numberFormatGuaranies(matricula) : "Gs. 0"}
+                  {matricula > 0 ? numberFormatGuaranies(matricula) : "Sin matrícula"}
                 </span>
               </div>
 

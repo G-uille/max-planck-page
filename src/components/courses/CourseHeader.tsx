@@ -165,7 +165,9 @@ const CoursePurchaseCard = ({ course }) => {
         <p className="ap-text-sm ap-text-[#5D574A] ap-mt-2">
           Matrícula:{" "}
           <strong className="ap-text-[#111111]">
-            {numberFormatGuaranies(course.matricula ?? 50000)}
+            {Number(course.matricula ?? 0) > 0
+              ? numberFormatGuaranies(course.matricula)
+              : "Sin matrícula"}
           </strong>
         </p>
 

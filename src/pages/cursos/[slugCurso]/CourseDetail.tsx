@@ -20,6 +20,7 @@ import {
 import { getCourseDiscountInfo } from "../../../utils/courseView";
 import contactUs from "../../../pages/store/data/contact";
 import { useScrollToTopWindow } from "../../../hooks/use-scrollToTop";
+import usePageSeo from "../../../hooks/use-page-seo";
 
 const WHATSAPP_URL = contactUs.walink;
 
@@ -57,6 +58,13 @@ export const CourseDetailPage = () => {
   const { courses, loading } = usePublicCourses();
   const course = courses.find((c: any) => c.slug === slugCurso);
   const display = useDisplay();
+
+  usePageSeo(course ? {
+    title: `${(course as any).titulo || "Curso"} | Cursillo Max Planck`,
+    description: (course as any).descripcionCorta || (course as any).descripcionLarga || "Conocé este curso de Cursillo Max Planck.",
+    image: (course as any).fileURL,
+    canonicalPath: `/cursos/${course.slug}`,
+  } : undefined);
 
   useScrollToTopWindow();
 
